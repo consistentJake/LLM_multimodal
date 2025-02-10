@@ -1,0 +1,7 @@
+development/
+
+train_history/
+
+saved_models/
+
+__pycache__/
