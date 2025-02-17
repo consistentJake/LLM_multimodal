@@ -3,11 +3,13 @@ from torch.utils.data import Dataset
 from collections import defaultdict
 
 class ContrastiveDataset(Dataset):
-    def __init__(self, sparse, dense, emb, labels):
+    def __init__(self, sparse, dense, emb, labels, business_ids, user_ids):
         self.sparse = sparse
         self.dense = dense
         self.emb = emb
         self.labels = labels
+        self.business_ids = business_ids
+        self.user_ids = user_ids
 
         # Precompute indices for each label
         self.label_to_indices = defaultdict(list)
@@ -48,5 +50,7 @@ class ContrastiveDataset(Dataset):
             self.dense[idx],
             self.emb[idx],
             positive_embed,
-            anchor_label
+            anchor_label,
+            self.business_ids[idx],
+            self.user_ids[idx]
         )

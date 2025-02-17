@@ -16,10 +16,16 @@ class Config:
         # Training parameters
         self.epochs = 1000
         self.batch_size = 1024
-        self.learning_rate = 3e-4
+        # TODO change back to 1024
+        # self.batch_size = 128
+        # self.learning_rate = 3e-4
+        self.learning_rate = 1e-4
         self.temperature = 0.1
         self.val_interval = 3
         self.early_stopping_patience = 100
+
+        # yes -> use new model with contrastive loss
+        self.is_contrastive_loss = True
         
         # Cross-validation
         self.fold_id = 2  # 0-4
@@ -32,6 +38,13 @@ class Config:
         
         # Logging
         self.log_file = "training_log.txt"
+        self.model_config = {
+                "is_contrastive_loss": self.is_contrastive_loss, # if true, means we calaulte user/business contrastive loss
+                "business_features_input_dim": 384,  
+                "user_features_input_dim": 384, 
+                "projection_dim": 32, 
+                "image_features_input_dim": 384,
+            }
         
     def get_model_params(self):
         return {
@@ -43,7 +56,8 @@ class Config:
             "bottom_mlp_dims": self.bottom_mlp_dims,
             "top_mlp_dims": self.top_mlp_dims,
             "emb_feature_dim_before_project": None,  # Update based on actual data
-            "dropout_prob": self.dropout_prob
+            "dropout_prob": self.dropout_prob,
+            "model_config" : self.model_config
         }
     
     def get_model_params(self, dense_feature_number, emb_feature_dim_before_project):
@@ -56,7 +70,8 @@ class Config:
             "bottom_mlp_dims": self.bottom_mlp_dims,
             "top_mlp_dims": self.top_mlp_dims,
             "emb_feature_dim_before_project": emb_feature_dim_before_project,  # Update based on actual data
-            "dropout_prob": self.dropout_prob
+            "dropout_prob": self.dropout_prob,
+            "model_config" : self.model_config
         }
         
     def get_training_params(self):

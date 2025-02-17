@@ -1,6 +1,10 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torch.optim as optim
+
+epsilon = 1e-10  # Small value to avoid division by zero and log of zero
+
 
 class ContrastiveNet(nn.Module):
     def __init__(self, input_dim, projection_dim=128):
@@ -15,6 +19,22 @@ class ContrastiveNet(nn.Module):
     def forward(self, x):
         # print(f"Input to projection: {x.shape}")
         return self.projection(x)
+
+
+# Define a simple MLP for dimensionality reduction
+# TODO finetune the MLP model for image vectors embedding dimension reduction 
+class MLPDimReduction(nn.Module):
+    def __init__(self, input_dim, hidden_dim = 64, output_dim = 32):
+        super(MLPDimReduction, self).__init__()
+        self.fc1 = nn.Linear(input_dim, hidden_dim)
+        self.relu = nn.ReLU()
+        self.fc2 = nn.Linear(hidden_dim, output_dim)
+        
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.fc2(x)  # Output is the reduced-dimension representation
+        return x
 
 class CustomLoss(nn.Module):
     def __init__(self):
@@ -34,16 +54,106 @@ class CustomLoss(nn.Module):
         
         return total_loss
 
+# users contraistive loss
+def compute_contrastive_loss_user(user_ids_in_batch, swing_similarity_data, model):
+    x_tensor = []
+    x_pos_tensor = []
+    x_neg_list_tensor = []
+    for user_id in user_ids_in_batch:
+        user_id = user_id.item()  # Convert to Python int
+        user_emb = swing_similarity_data.u_idx2u_emb[user_id]
+        # print(f"shape of swing_similarity_data.top5_similar_users[user_id] is {swing_similarity_data.top5_similar_users[user_id]}")
+        # shape of swing_similarity_data.top5_similar_users[user_id] is [(1801, 0), (3907, 0), (14802, 0), (8975, 0), (14174, 0)]
+        top_pos_user_id = swing_similarity_data.top5_similar_users[user_id][0][0] # 
+        top_pos_user_emb = swing_similarity_data.u_idx2u_emb[top_pos_user_id]
+        bottom5_pos_user_id = [pair[0] for pair in swing_similarity_data.bottom5_similar_users[user_id][:5]]
+        bottom5_pos_user_emb = [swing_similarity_data.u_idx2u_emb[x] for x in bottom5_pos_user_id]
 
-def compute_contrastive_loss1(user_ids_in_batch, user_relationship_map, model):
+        # append to tensor list 
+        # print("user_emb shape is ", user_emb.shape)
+        x_tensor.append(model(user_emb.unsqueeze(0)))
+        x_pos_tensor.append(model(top_pos_user_emb.unsqueeze(0)))
+        x_neg_list_tensor.append([model(x.unsqueeze(0)) for x in bottom5_pos_user_emb])
+    # convert to tensor
+    x_tensor = torch.stack(x_tensor)
+    x_pos_tensor = torch.stack(x_pos_tensor)
+    x_neg_list_tensor = torch.stack([torch.stack(x_neg) for x_neg in x_neg_list_tensor])
 
-    return 0
+    ## TODO, how to make it as a tensor and model eval in batch
+
+    return contrastive_loss_helper(x_tensor, x_pos_tensor, x_neg_list_tensor)
+
+# business contrastive loss
+def compute_contrastive_loss_business(business_ids_in_batch, swing_similarity_data, model):
+
+    x_tensor = []
+    x_pos_tensor = []
+    x_neg_list_tensor = []
+    for business_id in business_ids_in_batch:
+        business_id = business_id.item()  # Convert to Python int
+        business_emb = swing_similarity_data.b_idx2b_emb[business_id]
+        top_pos_business_id = swing_similarity_data.top5_similar_items[business_id][0][0]
+        top_pos_business_emb = swing_similarity_data.b_idx2b_emb[top_pos_business_id]
+        bottom5_pos_business_id = [pair[0] for pair in swing_similarity_data.bottom5_similar_items[business_id][:5]]
+        bottom5_pos_business_emb = [swing_similarity_data.b_idx2b_emb[x] for x in bottom5_pos_business_id]
+
+        # append to tensor list 
+        x_tensor.append(model(business_emb.unsqueeze(0)))
+        x_pos_tensor.append(model(top_pos_business_emb.unsqueeze(0)))
+        x_neg_list_tensor.append([model(x.unsqueeze(0)) for x in bottom5_pos_business_emb])
+    # convert to tensor
+    x_tensor = torch.stack(x_tensor)
+    x_pos_tensor = torch.stack(x_pos_tensor)
+    x_neg_list_tensor = torch.stack([torch.stack(x_neg) for x_neg in x_neg_list_tensor])
+
+    ## TODO, how to make it as a tensor and model eval in batch
+
+    return contrastive_loss_helper(x_tensor, x_pos_tensor, x_neg_list_tensor)
 
 
-def compute_contrastive_loss2(business_ids_in_batch, business_relationship_map, model):
+def contrastive_loss_helper(f_x, f_x_pos, f_x_neg_list, tau=0.07):
+    """
+    Computes the InfoNCE loss without feature normalization.
 
-    return 0
+    Args:
+        f_x (torch.Tensor): The feature representation of the anchor sample (batch_size, dim).
+        f_x_pos (torch.Tensor): The feature representation of the positive sample (batch_size, dim).
+        f_x_neg_list (list of torch.Tensor): A list of negative samples (each of shape (batch_size, num_neg, dim)).
+        tau (float): Temperature parameter.
 
+    Returns:
+        torch.Tensor: The computed InfoNCE loss.
+    """
+
+    # Compute positive similarity: exp(f_x^T f_x^+ / tau)
+    pos_sim = torch.exp(torch.sum(f_x * f_x_pos, dim=-1) / tau)  # (batch_size)
+
+    # Compute negative similarities for each negative group and sum them
+    neg_sim = sum(torch.exp(torch.sum(f_x.unsqueeze(1) * f_x_neg, dim=-1) / tau) for f_x_neg in f_x_neg_list)  # (batch_size, num_neg) summed
+
+    # Compute the denominator
+    denominator = pos_sim + torch.sum(neg_sim, dim=-1)  # (batch_size)
+
+
+    # Compute the ratio
+    ratio = pos_sim / denominator
+    # print(f"pos_sim: {pos_sim}, neg_sim: {neg_sim}, denominator: {denominator}, ratio: {ratio}")
+    # Ensure the ratio is positive
+    if torch.isnan(ratio).any():
+        print("NaN detected in ratio. Applying clamping.")
+    if torch.isinf(ratio).any():
+        print("Inf detected in ratio. Applying clamping.")
+    
+    # Replace NaN and Inf values in ratio with epsilon
+    ratio = torch.where(torch.isnan(ratio) | torch.isinf(ratio), torch.tensor(epsilon, device=ratio.device), ratio)
+    # ratio = torch.clamp(ratio, min=epsilon)
+
+
+    # Compute loss 
+    ## TODO, he .mean() at the end is used to compute the average loss across the batch. make sure we need to do the mean
+    loss = -torch.log(ratio).mean()  # Scalar loss
+
+    return loss
 
 
 class InfoNCELoss(nn.Module):
@@ -137,12 +247,23 @@ class FeatureInteraction(nn.Module):
 
 class DLRM(torch.nn.Module):
 
-    def __init__(self,sparse_feature_num, dense_feature_number, emb_feature_dim, sparse_dim_before_embedding, sparse_dim_after_embedding, bottom_mlp_dims, top_mlp_dims, emb_feature_dim_before_project, dropout_prob):
+    def __init__(self,sparse_feature_num, dense_feature_number, emb_feature_dim, sparse_dim_before_embedding, sparse_dim_after_embedding, 
+                 bottom_mlp_dims, top_mlp_dims, emb_feature_dim_before_project, dropout_prob, model_config):
         super(DLRM, self).__init__()
         if sparse_dim_before_embedding > 0:
             self.embedding = torch.nn.Embedding(sparse_dim_before_embedding, sparse_dim_after_embedding, padding_idx=179)
         self.layer_feature_interaction = FeatureInteraction()
-        self.projection_model = ContrastiveNet(emb_feature_dim_before_project, emb_feature_dim)  # ContrastiveNet instance
+        self.model_config = model_config
+        self.is_contrastive_loss = model_config["is_contrastive_loss"]
+
+        if model_config["is_contrastive_loss"]:
+            self.business_projection_model = ContrastiveNet(model_config["business_features_input_dim"], model_config["projection_dim"])
+            self.user_projection_model = ContrastiveNet(model_config["user_features_input_dim"], model_config["projection_dim"])
+            self.image_projection_model = MLPDimReduction(model_config["image_features_input_dim"], model_config["projection_dim"]) # 
+            self.real_emb_features_dim = 3 * model_config["projection_dim"] # we concat 3 projection results
+        else:
+            self.projection_model = ContrastiveNet(emb_feature_dim_before_project, emb_feature_dim)  # ContrastiveNet instance
+            self.real_emb_features_dim = emb_feature_dim
 
         self.bottom_mlp = torch.nn.Sequential(
             torch.nn.Linear(dense_feature_number, bottom_mlp_dims[0]),
@@ -152,7 +273,8 @@ class DLRM(torch.nn.Module):
             torch.nn.ReLU(),
             torch.nn.Dropout(dropout_prob)
         )
-        self.all_dim = sparse_feature_num * sparse_dim_after_embedding + bottom_mlp_dims[1] + emb_feature_dim
+
+        self.all_dim = sparse_feature_num * sparse_dim_after_embedding + bottom_mlp_dims[1] + self.real_emb_features_dim
         self.output_dim = ((self.all_dim * (self.all_dim + 1)) // 2) + bottom_mlp_dims[1]
         self.top_mlp = torch.nn.Sequential(
             torch.nn.Linear(self.output_dim, top_mlp_dims[0]),
@@ -165,14 +287,30 @@ class DLRM(torch.nn.Module):
             torch.nn.Sigmoid()
         )
 
-    def forward(self, x_sparse, x_dense, x_embed_before_projection):
+    def forward(self, x_sparse, x_dense, x_embed_before_projection, postive_input=None):
         # is_sparse_features_included = not IS_BASELINE and x_sparse.shape[0] > 0
         # if is_sparse_features_included:
         embed_x = self.embedding(x_sparse)
         embed_x = embed_x.sum(dim = 1) # (B, N, D) -> (B, D) N is the length after padding 11 in our case. 
         #embed_x = embed_x.view(x_sparse.shape[0], -1) # concat all embedding of sparse features together
 
-        x_embed = self.projection_model(x_embed_before_projection)
+        if self.is_contrastive_loss:
+            # projection for business and user features
+            # here we expect each x_embed_before_projection contain 3 tensors, each of them is 384 dimension, 
+            # first one is business, second one is user, third one is image embedding
+            # print("x_embed_before_projection's shape ", x_embed_before_projection.shape)
+            # Extract each component separately
+            x_embed_business = x_embed_before_projection[:, 0, :]  # Shape (n, 384)
+            x_embed_user = x_embed_before_projection[:, 1, :]      # Shape (n, 384)
+            x_embed_image = x_embed_before_projection[:, 2, :]     # Shape (n, 384)
+
+            # Process each component separately
+            x_embed_business = self.business_projection_model(x_embed_business)
+            x_embed_user = self.user_projection_model(x_embed_user)
+            x_embed_image = self.image_projection_model(x_embed_image)
+            x_embed = torch.concat([x_embed_business, x_embed_user, x_embed_image], dim=-1)
+        else:
+            x_embed = self.projection_model(x_embed_before_projection)
         bottom_mlp_output = self.bottom_mlp(x_dense)
         
         # TODO change name of variables
@@ -190,4 +328,5 @@ class DLRM(torch.nn.Module):
 
         output = output.squeeze().unsqueeze(1)
 
-        return output, x_embed
+        postive_embed = self.projection_model(postive_input) if postive_input is not None else None
+        return output, x_embed, postive_embed

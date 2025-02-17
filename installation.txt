@@ -27,6 +27,8 @@ gdown --id 1sbBdxtpmvNnXY5tCQLxe6GmHz9a6iv_7
 gdown --id 1Ptfs6znU3HhLfEEbFj8eUncIoDXBI-VW
 gdown --id 1KboCVRoZy-DcDidHCATtcmFml3D7SpoW
 
+# similarity data 
+gdown --id 1FM0fBycuXlSP_nTE8ZQ-gbkRhYqBV_wW
 
 NIST Guide for Conducting risk assessment: https://csrc.nist.gov/pubs/sp/800/30/r1/final
 Sendi, A. S., & Cheriet, M. (2014, March). Cloud computing: A risk assessment model. In 2014 IEEE International Conference on Cloud Engineering (pp. 147-152). IEEE.

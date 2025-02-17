@@ -4,10 +4,10 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from datetime import datetime
 from torchmetrics.classification import ConfusionMatrix
-from models import InfoNCELoss, CustomLoss
+from models import InfoNCELoss, CustomLoss, compute_contrastive_loss_user, compute_contrastive_loss_business
 from utils import calculate_weights, get_fp_rate, get_formatted_time
 
-def validate_one_epoch(model, val_loader, device, weight_dict, print_method, epoch, temperature):
+def validate_one_epoch(model, val_loader, device, weight_dict, print_method, epoch, swing_similarity_data, custom_loss_fn, temperature):
     model.eval()
     val_loss = 0.0
     correct = 0
@@ -17,28 +17,72 @@ def validate_one_epoch(model, val_loader, device, weight_dict, print_method, epo
     info_nce_loss_fn = InfoNCELoss(temperature).to(device)
     bce_loss_fn = nn.BCELoss()
 
+    # with torch.no_grad():
+    #     for sparse_f, dense_f, emb_f, positives_f, target_f, in val_loader:
+    #         dense_f = dense_f.to(device)
+    #         sparse_f = sparse_f.to(device)
+    #         emb_f = emb_f.to(device)
+    #         target_f = target_f.to(device)
+
+    #         output, x_embed, positive_embed = model(sparse_f, dense_f, emb_f)
+    #         cur_weights = torch.tensor([weight_dict[x.item()] for x in target_f], device=device)
+    #         criterion = nn.BCELoss(weight=cur_weights)
+
+    #         info_nce_loss = info_nce_loss_fn(x_embed, positive_embed, target_f)
+    #         bce_loss = bce_loss_fn(output, target_f.unsqueeze(1).float())
+    #         loss = info_nce_loss + bce_loss
+    #         val_loss += loss.item() * dense_f.size(0)
+
+    #         predicted = (output > 0.5).float().squeeze(1)
+    #         total += target_f.size(0)
+    #         correct += (predicted == target_f).sum().item()
+
+    #         all_preds.extend(predicted.cpu().numpy())
+    #         all_targets.extend(target_f.cpu().numpy())
     with torch.no_grad():
-        for sparse_f, dense_f, emb_f, positives_f, target_f in val_loader:
-            dense_f = dense_f.to(device)
-            sparse_f = sparse_f.to(device)
-            emb_f = emb_f.to(device)
-            target_f = target_f.to(device)
+        for sparse, dense, original_emb, positives, labels, business_ids, user_ids in val_loader:
+            # Move data to device
+            dense = dense.to(device)
+            sparse = sparse.to(device)
+            original_emb = original_emb.to(device)
+            labels = labels.to(device)
 
-            output, x_embed, positive_embed = model(sparse_f, dense_f, emb_f)
-            cur_weights = torch.tensor([weight_dict[x.item()] for x in target_f], device=device)
-            criterion = nn.BCELoss(weight=cur_weights)
+            
 
-            info_nce_loss = info_nce_loss_fn(x_embed, positive_embed, target_f)
-            bce_loss = bce_loss_fn(output, target_f.unsqueeze(1).float())
-            loss = info_nce_loss + bce_loss
-            val_loss += loss.item() * dense_f.size(0)
+            # Forward pass
+            if model.is_contrastive_loss:
+                # Use the contrastive loss
+                output, x_embed, _ = model(sparse, dense, original_emb, None)
+            else:
+                output, x_embed, positive_embed = model(sparse, dense, original_emb, positives)
+
+
+            # # Calculate loss
+            # info_nce_loss_fn = InfoNCELoss(temperature).to(device)
+            # info_nce_loss = info_nce_loss_fn(x_embed, positive_embed, labels)
+
+            # BCE loss with weights
+            cur_weights = torch.tensor([weight_dict[x.item()] for x in labels], device=device)
+            bce_loss_fn = nn.BCELoss(weight=cur_weights.unsqueeze(1))            
+            bce_loss = bce_loss_fn(output, labels.unsqueeze(1).float())
+
+            # print("calculating contrastive loss")
+            # switch to model into evaluation mode as we need to compute the 
+            contrastive_loss_user = compute_contrastive_loss_user(user_ids, swing_similarity_data, model.user_projection_model)
+            contrastive_loss_business = compute_contrastive_loss_business(business_ids, swing_similarity_data, model.business_projection_model)
+
+
+            # combining two losses
+            loss = custom_loss_fn(bce_loss, contrastive_loss_user, contrastive_loss_business)
+
+            val_loss += loss.item() * output.size(0)
 
             predicted = (output > 0.5).float().squeeze(1)
-            total += target_f.size(0)
-            correct += (predicted == target_f).sum().item()
+            total += output.size(0)
+            correct += (predicted == output).sum().item()
 
             all_preds.extend(predicted.cpu().numpy())
-            all_targets.extend(target_f.cpu().numpy())
+            all_targets.extend(output.cpu().numpy())
 
     val_loss /= len(val_loader.dataset)
     accuracy = correct / total
@@ -54,7 +98,7 @@ def validate_one_epoch(model, val_loader, device, weight_dict, print_method, epo
     print_method(f"Validation at epoch {epoch}: Loss={val_loss:.4f}, Accuracy={accuracy:.4f}, FP Rate={get_fp_rate(conf_matrix):.4f}")
     return val_loss, accuracy, conf_matrix
 
-def train_contrastive_model(model, train_labels, train_dataloader, val_dataloader, para_dict):
+def train_contrastive_model(model, train_labels, train_dataloader, val_dataloader, para_dict, swing_similarity_data):
     start_time = get_formatted_time()
     # batch_size = para_dict['batch_size']
     epochs = para_dict['epochs']
@@ -101,11 +145,14 @@ def train_contrastive_model(model, train_labels, train_dataloader, val_dataloade
     print_method(f"Training started at {start_time}")
     for epoch in range(epochs):
         model.train()
+        model.user_projection_model.train()
+        model.business_projection_model.train()
+
         total_loss = 0
         num_train = 0
         correct = 0
         ## TODO remove passing in positives from dataloader
-        for sparse, dense, original_emb, positives, labels in train_dataloader:
+        for sparse, dense, original_emb, positives, labels, business_ids, user_ids in train_dataloader:
             # Move data to device
             dense = dense.to(device)
             sparse = sparse.to(device)
@@ -116,7 +163,11 @@ def train_contrastive_model(model, train_labels, train_dataloader, val_dataloade
 
             # Forward pass
             optimizer.zero_grad()
-            output, x_embed, positive_embed = model(sparse, dense, original_emb)
+            if model.is_contrastive_loss:
+                # Use the contrastive loss
+                output, x_embed, _ = model(sparse, dense, original_emb, None)
+            else:
+                output, x_embed, positive_embed = model(sparse, dense, original_emb, positives)
 
 
             # # Calculate loss
@@ -125,21 +176,39 @@ def train_contrastive_model(model, train_labels, train_dataloader, val_dataloade
 
             # BCE loss with weights
             cur_weights = torch.tensor([weight_dict[x.item()] for x in labels], device=device)
-            bce_loss_fn = nn.BCELoss(weight=cur_weights.unsqueeze(1))            
+            bce_loss_fn = nn.BCELoss(weight=cur_weights.unsqueeze(1))    
+            # print("labels", labels)        
+            # print("output", output)
             bce_loss = bce_loss_fn(output, labels.unsqueeze(1).float())
 
+            # print("calculating contrastive loss")
             # switch to model into evaluation mode as we need to compute the 
             model.eval()
-            contrastive_loss1 = compute_contrastive_loss1(user_ids_in_batch, user_relationship_map, model)
-            contrastive_loss2 = compute_contrastive_loss2(business_ids_in_batch, business_relationship_map, model)
+            model.user_projection_model.eval()
+            model.business_projection_model.eval()
+            contrastive_loss_user = compute_contrastive_loss_user(user_ids, swing_similarity_data, model.user_projection_model)
+            contrastive_loss_business = compute_contrastive_loss_business(business_ids, swing_similarity_data, model.business_projection_model)
 
+            # re-enable model train mode
+            model.train()
+            model.user_projection_model.train()
+            model.business_projection_model.train()
 
             # combining two losses
-            loss = custom_loss_fn(bce_loss, contrastive_loss1, contrastive_loss2)
+            loss = custom_loss_fn(bce_loss, contrastive_loss_user, contrastive_loss_business)
+            print(f"contrastive_loss_user:{contrastive_loss_user.item()}\t, contrastive_loss_business:{contrastive_loss_business.item()}\t, bce_loss:{bce_loss.item()}\t, loss:{loss.item()}")
+
 
 
             # Backward pass
             loss.backward()
+
+            # Apply gradient clipping
+            torch.nn.utils.clip_grad_norm_(model.user_projection_model.parameters(), max_norm=1.0)
+            torch.nn.utils.clip_grad_norm_(model.business_projection_model.parameters(), max_norm=1.0)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+            
+            # update model parameters
             optimizer.step()
 
             # Update metrics
@@ -154,7 +223,7 @@ def train_contrastive_model(model, train_labels, train_dataloader, val_dataloade
         # Validation
         if epoch % val_interval == 0:
             val_loss, val_accuracy, val_conf_matrix = validate_one_epoch(
-                model, val_dataloader, device, weight_dict, print_method, epoch, temperature
+                model, val_dataloader, device, weight_dict, print_method, epoch, swing_similarity_data, custom_loss_fn, temperature
             )
             
             # Early stopping check
