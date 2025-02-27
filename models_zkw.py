@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-import pdb 
 
 epsilon = 1e-10  # Small value to avoid division by zero and log of zero
 
@@ -65,14 +64,16 @@ def compute_contrastive_loss_user(user_ids_in_batch, swing_similarity_data, mode
         user_emb = swing_similarity_data.u_idx2u_emb[user_id]
         # print(f"shape of swing_similarity_data.top5_similar_users[user_id] is {swing_similarity_data.top5_similar_users[user_id]}")
         # shape of swing_similarity_data.top5_similar_users[user_id] is [(1801, 0), (3907, 0), (14802, 0), (8975, 0), (14174, 0)]
-        top_pos_user_id, bottom_pos_user_id = swing_similarity_data.top_bottom_similar_users[user_id] # 
+        top_pos_user_id = swing_similarity_data.top5_similar_users[user_id][0][0] # 
         top_pos_user_emb = swing_similarity_data.u_idx2u_emb[top_pos_user_id]
-        bottom_pos_user_emb = swing_similarity_data.u_idx2u_emb[bottom_pos_user_id]
+        bottom5_pos_user_id = [pair[0] for pair in swing_similarity_data.bottom5_similar_users[user_id][:5]]
+        bottom5_pos_user_emb = [swing_similarity_data.u_idx2u_emb[x] for x in bottom5_pos_user_id]
+
         # append to tensor list 
         # print("user_emb shape is ", user_emb.shape)
         x_tensor.append(model(user_emb.unsqueeze(0)))
         x_pos_tensor.append(model(top_pos_user_emb.unsqueeze(0)))
-        x_neg_list_tensor.append([model(bottom_pos_user_emb.unsqueeze(0))])
+        x_neg_list_tensor.append([model(x.unsqueeze(0)) for x in bottom5_pos_user_emb])
     # convert to tensor
     x_tensor = torch.stack(x_tensor)
     x_pos_tensor = torch.stack(x_pos_tensor)
@@ -91,14 +92,15 @@ def compute_contrastive_loss_business(business_ids_in_batch, swing_similarity_da
     for business_id in business_ids_in_batch:
         business_id = business_id.item()  # Convert to Python int
         business_emb = swing_similarity_data.b_idx2b_emb[business_id]
-        top_pos_business_id, bottom5_pos_business_id = swing_similarity_data.top_bottom_similar_businesses[business_id]
+        top_pos_business_id = swing_similarity_data.top5_similar_items[business_id][0][0]
         top_pos_business_emb = swing_similarity_data.b_idx2b_emb[top_pos_business_id]
-        bottom_pos_business_emb = swing_similarity_data.b_idx2b_emb[bottom5_pos_business_id]
+        bottom5_pos_business_id = [pair[0] for pair in swing_similarity_data.bottom5_similar_items[business_id][:5]]
+        bottom5_pos_business_emb = [swing_similarity_data.b_idx2b_emb[x] for x in bottom5_pos_business_id]
 
         # append to tensor list 
         x_tensor.append(model(business_emb.unsqueeze(0)))
         x_pos_tensor.append(model(top_pos_business_emb.unsqueeze(0)))
-        x_neg_list_tensor.append(model(bottom_pos_business_emb.unsqueeze(0)))
+        x_neg_list_tensor.append([model(x.unsqueeze(0)) for x in bottom5_pos_business_emb])
     # convert to tensor
     x_tensor = torch.stack(x_tensor)
     x_pos_tensor = torch.stack(x_pos_tensor)
@@ -124,36 +126,26 @@ def contrastive_loss_helper(f_x, f_x_pos, f_x_neg_list, tau=1):
     """
 
     # Compute positive similarity: exp(f_x^T f_x^+ / tau)
-    #pos_sim = torch.exp(torch.sum(f_x * f_x_pos, dim=-1) / tau)  # (batch_size)
-    
-   
+    pos_sim = torch.exp(torch.sum(f_x * f_x_pos, dim=-1) / tau)  # (batch_size)
 
     # Compute negative similarities for each negative group and sum them
-    
-    #neg_sim = sum(torch.exp(torch.sum(f_x.unsqueeze(1) * f_x_neg, dim=-1) / tau) for f_x_neg in f_x_neg_list)  # (batch_size, num_neg) summed
-    
-    
-    # Compute the denominator
-    #denominator = pos_sim + torch.sum(neg_sim, dim=-1)  # (batch_size)
+    neg_sim = sum(torch.exp(torch.sum(f_x.unsqueeze(1) * f_x_neg, dim=-1) / tau) for f_x_neg in f_x_neg_list)  # (batch_size, num_neg) summed
 
-    pos_sim = torch.exp(torch.bmm(f_x, f_x_pos.transpose(2, 1)).squeeze(2) / tau) # (B, 1)
-    neg_sim = torch.exp(torch.sum(torch.bmm(f_x, f_x_neg_list.squeeze(2).transpose(2, 1)), dim = 2) / tau) # (B, 1)
-    denominator = pos_sim + neg_sim 
-    
+    # Compute the denominator
+    denominator = pos_sim + torch.sum(neg_sim, dim=-1)  # (batch_size)
+
 
     # Compute the ratio
-    ratio = torch.nan_to_num(pos_sim / denominator)
+    ratio = pos_sim / denominator
     # print(f"pos_sim: {pos_sim}, neg_sim: {neg_sim}, denominator: {denominator}, ratio: {ratio}")
     # Ensure the ratio is positive
     if torch.isnan(ratio).any():
-        pdb.set_trace()
         print("NaN detected in ratio. Applying clamping.")
-        print(f"The numerator is {pos_sim} and the denominator is {denominator}, neg_sim is {neg_sim}")
     if torch.isinf(ratio).any():
         print("Inf detected in ratio. Applying clamping.")
     
     # Replace NaN and Inf values in ratio with epsilon
-    #ratio = torch.where(torch.isnan(ratio) | torch.isinf(ratio), torch.tensor(epsilon, device=ratio.device), ratio)
+    ratio = torch.where(torch.isnan(ratio) | torch.isinf(ratio), torch.tensor(epsilon, device=ratio.device), ratio)
     # ratio = torch.clamp(ratio, min=epsilon)
 
 
@@ -161,7 +153,7 @@ def contrastive_loss_helper(f_x, f_x_pos, f_x_neg_list, tau=1):
     ## TODO, he .mean() at the end is used to compute the average loss across the batch. make sure we need to do the mean
     loss = -torch.log(ratio).mean()  # Scalar loss
 
-    return loss if not torch.isinf(loss) else torch.tensor([0])
+    return loss
 
 
 class InfoNCELoss(nn.Module):

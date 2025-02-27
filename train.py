@@ -93,7 +93,7 @@ def validate_one_epoch(model, val_loader, device, weight_dict, print_method, epo
     # total_neg_num = (all_targets == False).sum().item()
 
     confmat = ConfusionMatrix(task="binary").to(device)
-    conf_matrix = confmat(all_preds, all_targets)
+    conf_matrix = confmat(all_preds.unsqueeze(1), all_targets)
     
     print_method(f"Validation at epoch {epoch}: Loss={val_loss:.4f}, Accuracy={accuracy:.4f}, FP Rate={get_fp_rate(conf_matrix):.4f}")
     return val_loss, accuracy, conf_matrix

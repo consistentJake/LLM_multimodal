@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 import pickle
 import numpy as np
 import itertools
-from swing_similarity_data import SwingSimilarityData
+from swing_similarity_data import SwingSimilarityData, SwingSimilarityData2
 # from swing import get_user_item_relationship, calculate_swing_items, calculate_swing_users
 
 def load_data(config):
@@ -67,18 +67,29 @@ def load_data(config):
     business_ids_all = [b[0] for b in features_data['bf']]
     user_id_all = [u[0] for u in features_data['uf']]
 
-    # load similarity data
-    with open(f"{config.input_folder}/similarity_data.pickle", "rb") as f:
-        similarity_data = pickle.load(f)
-    # b_idx_to_id = similarity_data['b_idx_to_id']
-    id_to_b_idx = similarity_data['id_to_b_idx']
-    # u_idx_to_id = similarity_data['u_idx_to_id']
-    id_to_u_idx = similarity_data['id_to_u_idx']
-    top5_similar_items = similarity_data['top5_similar_items']
-    bottom5_similar_items = similarity_data['bottom5_similar_items']
-    top5_similar_users = similarity_data['top5_similar_users']
-    bottom5_similar_users = similarity_data['bottom5_similar_users']
+    # # load similarity data
+    # with open(f"{config.input_folder}/similarity_data.pickle", "rb") as f:
+    #     similarity_data = pickle.load(f)
+    # # b_idx_to_id = similarity_data['b_idx_to_id']
+    # id_to_b_idx = similarity_data['id_to_b_idx']
+    # # u_idx_to_id = similarity_data['u_idx_to_id']
+    # id_to_u_idx = similarity_data['id_to_u_idx']
+    # top5_similar_items = similarity_data['top5_similar_items']
+    # bottom5_similar_items = similarity_data['bottom5_similar_items']
+    # top5_similar_users = similarity_data['top5_similar_users']
+    # bottom5_similar_users = similarity_data['bottom5_similar_users']
 
+    # load similarity data simple 
+    with open(f"{config.input_folder}/similarity_data_simple", "rb") as f:
+        similarity_data = pickle.load(f)
+    b_idx_to_id = similarity_data['b_idx_to_id']
+    id_to_b_idx = similarity_data['id_to_b_idx']
+    u_idx_to_id = similarity_data['u_idx_to_id']
+    id_to_u_idx = similarity_data['id_to_u_idx']
+    sorted_similar_items_map = similarity_data['sorted_similar_items_map']
+    sorted_similar_users_map = similarity_data['sorted_similar_users_map']
+    total_num_distinct_business = len(b_idx_to_id)
+    total_num_distinct_users = len(u_idx_to_id)
     # get the mappings: int based index -> user/business  embedding 
     b_idx2b_emb = {}
     for i, b_id in enumerate(business_ids_all):
@@ -130,8 +141,12 @@ def load_data(config):
     # business_similarity_matrix = calculate_swing_items(user2Business, business2User)
 
     # change this into model
-    swing_similarity_data = SwingSimilarityData(train_b_idxs, train_u_idxs, val_b_idxs, val_u_idxs,
-        top5_similar_items, bottom5_similar_items, top5_similar_users, bottom5_similar_users, b_idx2b_emb, u_idx2u_emb)
+    # swing_similarity_data = SwingSimilarityData(train_b_idxs, train_u_idxs, val_b_idxs, val_u_idxs,
+    #     top5_similar_items, bottom5_similar_items, top5_similar_users, bottom5_similar_users, b_idx2b_emb, u_idx2u_emb)
+    
+    swing_similarity_data = SwingSimilarityData2(train_b_idxs, train_u_idxs, val_b_idxs, val_u_idxs,
+        sorted_similar_items_map, sorted_similar_users_map, total_num_distinct_business, total_num_distinct_users,
+        b_idx2b_emb, u_idx2u_emb)
 
 
     return (train_sparse, train_dense, train_emb_features, train_labels,
