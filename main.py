@@ -80,7 +80,7 @@ def load_data(config):
     # bottom5_similar_users = similarity_data['bottom5_similar_users']
 
     # load similarity data simple 
-    with open(f"{config.input_folder}/similarity_data_simple", "rb") as f:
+    with open(f"{config.input_folder}/similarity_data_simple.pickle", "rb") as f:
         similarity_data = pickle.load(f)
     b_idx_to_id = similarity_data['b_idx_to_id']
     id_to_b_idx = similarity_data['id_to_b_idx']
@@ -148,6 +148,7 @@ def load_data(config):
         sorted_similar_items_map, sorted_similar_users_map, total_num_distinct_business, total_num_distinct_users,
         b_idx2b_emb, u_idx2u_emb)
 
+    print("finished loading data")
 
     return (train_sparse, train_dense, train_emb_features, train_labels,
             val_sparse, val_dense, val_emb_features, val_labels, 
@@ -170,7 +171,7 @@ def main():
     train_dataset = ContrastiveDataset(train_sparse, train_dense, train_emb, train_labels, swing_similarity_data.train_business_ids, swing_similarity_data.train_user_ids)
     val_dataset = ContrastiveDataset(val_sparse, val_dense, val_emb, val_labels, swing_similarity_data.val_business_ids, swing_similarity_data.val_user_ids)
     
-    print(f"train dataset length is {train_sparse.shape[1]}, val dataset length is {val_sparse.shape[1]}")
+    print(f"train dataset length is {train_sparse.shape[0]}, val dataset length is {val_sparse.shape[0]}")
 
     # Create data loaders
     train_dataloader = DataLoader(

@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 from datetime import datetime
 from torchmetrics.classification import ConfusionMatrix
 from models import InfoNCELoss, CustomLoss, compute_contrastive_loss_user, compute_contrastive_loss_business
-from utils import calculate_weights, get_fp_rate, get_formatted_time
+from utils import calculate_weights, get_fp_rate, get_accuracy, get_formatted_time
 
 def validate_one_epoch(model, val_loader, device, weight_dict, print_method, epoch, swing_similarity_data, custom_loss_fn, temperature):
     model.eval()
@@ -68,6 +68,7 @@ def validate_one_epoch(model, val_loader, device, weight_dict, print_method, epo
 
             # print("calculating contrastive loss")
             # switch to model into evaluation mode as we need to compute the 
+            # print("in validation user_ids shape", user_ids.shape, "business_ids shape", business_ids.shape)
             contrastive_loss_user = compute_contrastive_loss_user(user_ids, swing_similarity_data, model.user_projection_model)
             contrastive_loss_business = compute_contrastive_loss_business(business_ids, swing_similarity_data, model.business_projection_model)
 
@@ -79,10 +80,9 @@ def validate_one_epoch(model, val_loader, device, weight_dict, print_method, epo
 
             predicted = (output > 0.5).float().squeeze(1)
             total += output.size(0)
-            correct += (predicted == output).sum().item()
 
             all_preds.extend(predicted.cpu().numpy())
-            all_targets.extend(output.cpu().numpy())
+            all_targets.extend(labels.cpu().numpy())
 
     val_loss /= len(val_loader.dataset)
     accuracy = correct / total
@@ -93,9 +93,34 @@ def validate_one_epoch(model, val_loader, device, weight_dict, print_method, epo
     # total_neg_num = (all_targets == False).sum().item()
 
     confmat = ConfusionMatrix(task="binary").to(device)
-    conf_matrix = confmat(all_preds.unsqueeze(1), all_targets)
-    
-    print_method(f"Validation at epoch {epoch}: Loss={val_loss:.4f}, Accuracy={accuracy:.4f}, FP Rate={get_fp_rate(conf_matrix):.4f}")
+    print("shape of all_preds is {}, all_targets is {}".format(all_preds.shape, all_targets.shape))
+    conf_matrix = confmat(all_preds, all_targets)
+
+    ## check out true of false 
+    # Count the number of True values
+    num_true = all_targets.sum().item()
+
+    # Count the number of False values
+    num_false = all_targets.numel() - num_true
+
+    print("all targets num_true", num_true, "num_false", num_false)
+
+        ## check out true of false 
+    # Count the number of True values
+    num_true = all_preds.sum().item()
+
+    # Count the number of False values
+    num_false = all_preds.numel() - num_true
+
+    print("all preds num_true", num_true, "num_false", num_false)
+
+    print("all_preds", all_preds)
+    print("all_targets", all_targets)
+    print("confusion matrix", conf_matrix)
+
+    fp_rate = get_fp_rate(conf_matrix)
+    accuracy = get_accuracy(conf_matrix)
+    print_method(f"Validation at epoch {epoch}: Loss={val_loss:.4f}, Accuracy={accuracy:.4f}, FP Rate={fp_rate:.4f}")
     return val_loss, accuracy, conf_matrix
 
 def train_contrastive_model(model, train_labels, train_dataloader, val_dataloader, para_dict, swing_similarity_data):
@@ -147,7 +172,7 @@ def train_contrastive_model(model, train_labels, train_dataloader, val_dataloade
         model.train()
         model.user_projection_model.train()
         model.business_projection_model.train()
-
+        counter = 0
         total_loss = 0
         num_train = 0
         correct = 0
@@ -186,6 +211,8 @@ def train_contrastive_model(model, train_labels, train_dataloader, val_dataloade
             model.eval()
             model.user_projection_model.eval()
             model.business_projection_model.eval()
+            # print("user_ids shape", user_ids.shape, "business_ids shape", business_ids.shape)
+
             contrastive_loss_user = compute_contrastive_loss_user(user_ids, swing_similarity_data, model.user_projection_model)
             contrastive_loss_business = compute_contrastive_loss_business(business_ids, swing_similarity_data, model.business_projection_model)
 
@@ -196,7 +223,11 @@ def train_contrastive_model(model, train_labels, train_dataloader, val_dataloade
 
             # combining two losses
             loss = custom_loss_fn(bce_loss, contrastive_loss_user, contrastive_loss_business)
-            print(f"contrastive_loss_user:{contrastive_loss_user.item()}\t, contrastive_loss_business:{contrastive_loss_business.item()}\t, bce_loss:{bce_loss.item()}\t, loss:{loss.item()}")
+
+            #
+            counter += 1
+            if counter % 40 == 0:
+                print(f"contrastive_loss_user:{contrastive_loss_user.item()}\t, contrastive_loss_business:{contrastive_loss_business.item()}\t, bce_loss:{bce_loss.item()}\t, loss:{loss.item()}")
 
 
 

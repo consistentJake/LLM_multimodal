@@ -39,14 +39,22 @@ class SwingSimilarityData2():
                     return idx
 
         def find_top_bottom_similar(input_list, total_num):
-            
-            if len(input_list) > 0:
+            num_input = len(input_list)
+            if num_input > 0:
+                # if num_input > 20:
+                #     print(num_input)
                 return (input_list[0], find_idx_out_of_range(set(input_list), total_num))
             else:
                 top_element = find_idx_out_of_range(set(), total_num)
-                bottom_element = find_idx_out_of_range(set(top_element), total_num)
+                bottom_element = find_idx_out_of_range(set([top_element]), total_num)
                 return (top_element, bottom_element)
             
-
-        self.top_bottom_similar_businesses = find_top_bottom_similar(sorted_similar_items_map, num_items)
-        self.top_bottom_similar_users = find_top_bottom_similar(sorted_similar_users_map, num_users)
+        print("start to find top bottom similar items and users, num_items is {}, num_users is {}".format(num_items, num_users))
+        self.top_bottom_similar_businesses = {}
+        ## similar list of each business is a list of (business_id, similarity_score) pairs, same for users
+        for b, similar_list in sorted_similar_items_map.items():
+            self.top_bottom_similar_businesses[b] = find_top_bottom_similar([pair[0] for pair in similar_list], num_items)
+        self.top_bottom_similar_users = {}
+        for u, similar_list in sorted_similar_users_map.items():
+            self.top_bottom_similar_users[u] = find_top_bottom_similar([pair[0] for pair in similar_list], num_users)
+        print("finish finding top bottom similar items and users")

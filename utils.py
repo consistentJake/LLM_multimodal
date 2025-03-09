@@ -24,6 +24,16 @@ def get_fp_rate(conf_matrix):
     fp_rate = fp / (fp + tn)
     return fp_rate
 
+def get_accuracy(conf_matrix):
+    tn = conf_matrix[0, 0].item()  # True Negative
+    fp = conf_matrix[0, 1].item()  # False Positive
+    fn = conf_matrix[1, 0].item()  # False Negative
+    tp = conf_matrix[1, 1].item()  # True Positive
+    
+    # Calculate the accuracy
+    accuracy = (tp + tn) / (tp + tn + fp + fn)
+    return accuracy
+
 def get_formatted_time():
     # Get the current date and time
     now = datetime.now()

@@ -57,9 +57,10 @@ class CustomLoss(nn.Module):
 
 # users contraistive loss
 def compute_contrastive_loss_user(user_ids_in_batch, swing_similarity_data, model):
-    x_tensor = []
-    x_pos_tensor = []
-    x_neg_list_tensor = []
+    batch_size = len(user_ids_in_batch)
+    user_emb_list = [] * batch_size
+    top_pos_user_emb_list = [] * batch_size
+    bottom_pos_user_emb_list = [] * batch_size
     for user_id in user_ids_in_batch:
         user_id = user_id.item()  # Convert to Python int
         user_emb = swing_similarity_data.u_idx2u_emb[user_id]
@@ -70,14 +71,17 @@ def compute_contrastive_loss_user(user_ids_in_batch, swing_similarity_data, mode
         bottom_pos_user_emb = swing_similarity_data.u_idx2u_emb[bottom_pos_user_id]
         # append to tensor list 
         # print("user_emb shape is ", user_emb.shape)
-        x_tensor.append(model(user_emb.unsqueeze(0)))
-        x_pos_tensor.append(model(top_pos_user_emb.unsqueeze(0)))
-        x_neg_list_tensor.append([model(bottom_pos_user_emb.unsqueeze(0))])
-    # convert to tensor
-    x_tensor = torch.stack(x_tensor)
-    x_pos_tensor = torch.stack(x_pos_tensor)
-    x_neg_list_tensor = torch.stack([torch.stack(x_neg) for x_neg in x_neg_list_tensor])
-
+        user_emb_list.append(user_emb)
+        top_pos_user_emb_list.append(top_pos_user_emb)
+        bottom_pos_user_emb_list.append(bottom_pos_user_emb)
+    # Stack lists into tensors
+    user_emb_tensor = torch.stack(user_emb_list)
+    top_pos_user_emb_tensor = torch.stack(top_pos_user_emb_list)
+    bottom_pos_user_emb_tensor = torch.stack(bottom_pos_user_emb_list)
+    # Pass tensors through the model
+    x_tensor = model(user_emb_tensor).unsqueeze(1)
+    x_pos_tensor = model(top_pos_user_emb_tensor).unsqueeze(2)
+    x_neg_list_tensor = model(bottom_pos_user_emb_tensor).unsqueeze(2)
     ## TODO, how to make it as a tensor and model eval in batch
 
     return contrastive_loss_helper(x_tensor, x_pos_tensor, x_neg_list_tensor)
@@ -85,9 +89,10 @@ def compute_contrastive_loss_user(user_ids_in_batch, swing_similarity_data, mode
 # business contrastive loss
 def compute_contrastive_loss_business(business_ids_in_batch, swing_similarity_data, model):
 
-    x_tensor = []
-    x_pos_tensor = []
-    x_neg_list_tensor = []
+    batch_size = len(business_ids_in_batch)
+    business_emb_list = [] * batch_size
+    top_pos_business_emb_list = [] * batch_size
+    bottom_pos_business_emb_list = [] * batch_size
     for business_id in business_ids_in_batch:
         business_id = business_id.item()  # Convert to Python int
         business_emb = swing_similarity_data.b_idx2b_emb[business_id]
@@ -95,21 +100,25 @@ def compute_contrastive_loss_business(business_ids_in_batch, swing_similarity_da
         top_pos_business_emb = swing_similarity_data.b_idx2b_emb[top_pos_business_id]
         bottom_pos_business_emb = swing_similarity_data.b_idx2b_emb[bottom5_pos_business_id]
 
-        # append to tensor list 
-        x_tensor.append(model(business_emb.unsqueeze(0)))
-        x_pos_tensor.append(model(top_pos_business_emb.unsqueeze(0)))
-        x_neg_list_tensor.append(model(bottom_pos_business_emb.unsqueeze(0)))
-    # convert to tensor
-    x_tensor = torch.stack(x_tensor)
-    x_pos_tensor = torch.stack(x_pos_tensor)
-    x_neg_list_tensor = torch.stack([torch.stack(x_neg) for x_neg in x_neg_list_tensor])
+        business_emb_list.append(business_emb)
+        top_pos_business_emb_list.append(top_pos_business_emb)
+        bottom_pos_business_emb_list.append(bottom_pos_business_emb)
 
+    # Stack lists into tensors
+    business_emb_tensor = torch.stack(business_emb_list)
+    top_pos_business_emb_tensor = torch.stack(top_pos_business_emb_list)
+    bottom_pos_business_emb_tensor = torch.stack(bottom_pos_business_emb_list)
+
+    # Pass tensors through the model
+    x_tensor = model(business_emb_tensor).unsqueeze(1) # unsqueeze(1) make [1024, 32] to [1024, 1, 32], so that we can perform torch.bmm correctly
+    x_pos_tensor = model(top_pos_business_emb_tensor).unsqueeze(2) # unsqueeze(2) make [1024, 32] to [1024, 1, 32], so that we can perform torch.bmm correctly
+    x_neg_list_tensor = model(bottom_pos_business_emb_tensor).unsqueeze(2)
     ## TODO, how to make it as a tensor and model eval in batch
 
     return contrastive_loss_helper(x_tensor, x_pos_tensor, x_neg_list_tensor)
 
 
-def contrastive_loss_helper(f_x, f_x_pos, f_x_neg_list, tau=1):
+def contrastive_loss_helper(f_x, f_x_pos, f_x_neg, tau=1):
     """
     Computes the InfoNCE loss without feature normalization.
 
@@ -135,9 +144,8 @@ def contrastive_loss_helper(f_x, f_x_pos, f_x_neg_list, tau=1):
     
     # Compute the denominator
     #denominator = pos_sim + torch.sum(neg_sim, dim=-1)  # (batch_size)
-
-    pos_sim = torch.exp(torch.bmm(f_x, f_x_pos.transpose(2, 1)).squeeze(2) / tau) # (B, 1)
-    neg_sim = torch.exp(torch.sum(torch.bmm(f_x, f_x_neg_list.squeeze(2).transpose(2, 1)), dim = 2) / tau) # (B, 1)
+    pos_sim = torch.exp(torch.bmm(f_x, f_x_pos) / tau) # (B, 1)
+    neg_sim = torch.exp(torch.bmm(f_x, f_x_neg) / tau) # (B, 1)
     denominator = pos_sim + neg_sim 
     
 
