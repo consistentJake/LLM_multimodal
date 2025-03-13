@@ -55,6 +55,25 @@ class CustomLoss(nn.Module):
         
         return total_loss
 
+# only take one contrastive loss
+class CustomLoss2(nn.Module):
+    def __init__(self):
+        super(CustomLoss2, self).__init__()
+        # Initialize learnable weights as a single tensor
+        self.weights = nn.Parameter(torch.ones(2))  # One weight for each loss component
+        
+        # Ensure weights are positive using softplus
+        self.softplus = nn.Softplus()
+
+    def forward(self, bce_loss, contrastive_loss):
+        # Apply softplus to ensure weights are positive
+        w_bce, w_contrastive1 = self.softplus(self.weights)
+        
+        # Compute the weighted sum of the losses
+        total_loss = w_bce * bce_loss + w_contrastive1 * contrastive_loss
+        
+        return total_loss
+
 # users contraistive loss
 def compute_contrastive_loss_user(user_ids_in_batch, swing_similarity_data, model):
     batch_size = len(user_ids_in_batch)

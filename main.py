@@ -6,8 +6,10 @@ from train import train_contrastive_model
 from torch.utils.data import DataLoader
 import pickle
 import numpy as np
+import os
 import itertools
 from swing_similarity_data import SwingSimilarityData, SwingSimilarityData2
+import utils
 # from swing import get_user_item_relationship, calculate_swing_items, calculate_swing_users
 
 def load_data(config):
@@ -162,6 +164,9 @@ def main():
 
     # customerize the config if needed
     # config.epochs = 1000
+
+    start_time = utils.get_formatted_time()
+    print(f"Start time: {start_time}")
     
     # Load data
     (train_sparse, train_dense, train_emb, train_labels,
@@ -171,7 +176,7 @@ def main():
     train_dataset = ContrastiveDataset(train_sparse, train_dense, train_emb, train_labels, swing_similarity_data.train_business_ids, swing_similarity_data.train_user_ids)
     val_dataset = ContrastiveDataset(val_sparse, val_dense, val_emb, val_labels, swing_similarity_data.val_business_ids, swing_similarity_data.val_user_ids)
     
-    print(f"train dataset length is {train_sparse.shape[0]}, val dataset length is {val_sparse.shape[0]}")
+    print(f"train dataset length is {train_dataset.number_samples}, val dataset length is {val_dataset.number_samples}")
 
     # Create data loaders
     train_dataloader = DataLoader(
@@ -198,11 +203,17 @@ def main():
     train_params = config.get_training_params()
     
     # Train model
-    trained_model = train_contrastive_model(model, train_labels, train_dataloader,
+    trained_model, train_history = train_contrastive_model(model, train_labels, train_dataloader,
         val_dataloader,  train_params, swing_similarity_data)
     
+    end_time = utils.get_formatted_time()
+
+    save_label = f"{config.fold_id}_{start_time}_{end_time}"
+
     # Save final model
-    torch.save(trained_model.state_dict(), os.path.join(config.model_saved_path,"final_model.pth"))
+    torch.save(trained_model.state_dict(), os.path.join(config.model_saved_path,save_label + "_final_model.pth"))
+    with open(f"{config.log_folder}/{save_label}_train_history.txt", "w") as f:
+        f.write("\n".join(train_history))
 
 if __name__ == "__main__":
     main()

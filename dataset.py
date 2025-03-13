@@ -27,6 +27,7 @@ class ContrastiveDataset(Dataset):
             label: len(indices)
             for label, indices in self.label_to_indices.items()
         }
+        self.number_samples = sparse.shape[0]
 
     def __len__(self):
         return len(self.emb)

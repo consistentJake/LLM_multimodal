@@ -14,7 +14,8 @@ class Config:
         self.dropout_prob = 0.5
         
         # Training parameters
-        self.epochs = 1000
+        # self.epochs = 1000
+        self.epochs = 150
         self.batch_size = 1024
         # TODO change back to 1024
         # self.batch_size = 128
@@ -22,10 +23,9 @@ class Config:
         self.learning_rate = 1e-4
         self.temperature = 0.1
         self.val_interval = 3
-        self.early_stopping_patience = 100
+        self.early_stopping_patience = 30
 
-        # yes -> use new model with contrastive loss
-        self.is_contrastive_loss = True
+
         
         # Cross-validation
         self.fold_id = 2  # 0-4
@@ -36,6 +36,18 @@ class Config:
         # Device configuration
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         
+
+        
+        # Contrastive loss
+        # yes -> use new model with contrastive loss
+        self.is_contrastive_loss = True
+        self.is_use_user_contrastive_loss = False
+        self.is_use_business_contrastive_loss = False
+
+        print("is_contrastive_loss", self.is_contrastive_loss)
+        print("is_use_user_contrastive_loss", self.is_use_user_contrastive_loss)
+        print("is_use_business_contrastive_loss", self.is_use_business_contrastive_loss)    
+
         # Logging
         self.log_file = "training_log.txt"
         self.model_config = {
@@ -45,7 +57,7 @@ class Config:
                 "projection_dim": 32, 
                 "image_features_input_dim": 384,
             }
-        
+
     def get_model_params(self):
         return {
             "sparse_feature_num": 1,
@@ -84,5 +96,7 @@ class Config:
             "early_stopping_patience": self.early_stopping_patience,
             "fold_id": self.fold_id,
             "IS_SQRT_WEIGHT": self.is_sqrt_weight,
-            "device": self.device
+            "device": self.device,
+            "is_use_user_contrastive_loss": self.is_contrastive_loss and self.is_use_user_contrastive_loss,
+            "is_use_business_contrastive_loss": self.is_contrastive_loss and self.is_use_business_contrastive_loss
         }
