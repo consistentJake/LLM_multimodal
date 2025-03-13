@@ -56,6 +56,8 @@ class Config:
                 "user_features_input_dim": 384, 
                 "projection_dim": 32, 
                 "image_features_input_dim": 384,
+                "is_use_user_contrastive_loss": self.is_use_user_contrastive_loss,
+                "is_use_business_contrastive_loss": self.is_use_business_contrastive_loss
             }
 
     def get_model_params(self):

@@ -290,14 +290,19 @@ class DLRM(torch.nn.Module):
         self.layer_feature_interaction = FeatureInteraction()
         self.model_config = model_config
         self.is_contrastive_loss = model_config["is_contrastive_loss"]
+        self.is_use_user_contrastive_loss = model_config["is_use_user_contrastive_loss"]
+        self.is_use_business_contrastive_loss = model_config["is_use_business_contrastive_loss"]
 
-        if model_config["is_contrastive_loss"]:
+        if not self.is_use_business_contrastive_loss and not self.is_use_user_contrastive_loss:
+            print("embedding dim is ", emb_feature_dim_before_project)
+            self.projection_model = ContrastiveNet(emb_feature_dim_before_project, emb_feature_dim)  # ContrastiveNet instance
+        if self.is_contrastive_loss:
             self.business_projection_model = ContrastiveNet(model_config["business_features_input_dim"], model_config["projection_dim"])
             self.user_projection_model = ContrastiveNet(model_config["user_features_input_dim"], model_config["projection_dim"])
             self.image_projection_model = MLPDimReduction(model_config["image_features_input_dim"], model_config["projection_dim"]) # 
             self.real_emb_features_dim = 3 * model_config["projection_dim"] # we concat 3 projection results
         else:
-            self.projection_model = ContrastiveNet(emb_feature_dim_before_project, emb_feature_dim)  # ContrastiveNet instance
+            
             self.real_emb_features_dim = emb_feature_dim
 
         self.bottom_mlp = torch.nn.Sequential(
@@ -329,7 +334,7 @@ class DLRM(torch.nn.Module):
         embed_x = embed_x.sum(dim = 1) # (B, N, D) -> (B, D) N is the length after padding 11 in our case. 
         #embed_x = embed_x.view(x_sparse.shape[0], -1) # concat all embedding of sparse features together
 
-        if self.is_contrastive_loss:
+        if self.is_use_business_contrastive_loss and self.is_use_user_contrastive_loss:
             # projection for business and user features
             # here we expect each x_embed_before_projection contain 3 tensors, each of them is 384 dimension, 
             # first one is business, second one is user, third one is image embedding
@@ -344,8 +349,34 @@ class DLRM(torch.nn.Module):
             x_embed_user = self.user_projection_model(x_embed_user)
             x_embed_image = self.image_projection_model(x_embed_image)
             x_embed = torch.concat([x_embed_business, x_embed_user, x_embed_image], dim=-1)
+        elif self.is_use_business_contrastive_loss:
+            x_embed_business = x_embed_before_projection[:, 0, :]  # Shape (n, 384)
+            # x_embed_user = x_embed_before_projection[:, 1, :]      # Shape (n, 384)
+            x_embed_image = x_embed_before_projection[:, 2, :]     # Shape (n, 384)
+
+            # Process each component separately
+            x_embed_business = self.business_projection_model(x_embed_business)
+            # x_embed_user = self.user_projection_model(x_embed_user)
+            x_embed_image = self.image_projection_model(x_embed_image)
+            x_embed = torch.concat([x_embed_business, x_embed_image], dim=-1)
+        elif self.is_use_user_contrastive_loss:
+            # x_embed_business = x_embed_before_projection[:, 0, :]  # Shape (n, 384)
+            x_embed_user = x_embed_before_projection[:, 1, :]      # Shape (n, 384)
+            x_embed_image = x_embed_before_projection[:, 2, :]     # Shape (n, 384)
+
+            # Process each component separately
+            # x_embed_business = self.business_projection_model(x_embed_business)
+            x_embed_user = self.user_projection_model(x_embed_user)
+            x_embed_image = self.image_projection_model(x_embed_image)
+            x_embed = torch.concat([x_embed_user, x_embed_image], dim=-1)
         else:
-            x_embed = self.projection_model(x_embed_before_projection)
+            x_embed_business = x_embed_before_projection[:, 0, :]  # Shape (n, 384)
+            x_embed_user = x_embed_before_projection[:, 1, :]      # Shape (n, 384)
+            x_embed_image = x_embed_before_projection[:, 2, :]     # Shape (n, 384)
+            # no projection just concat
+            x_embed_all = torch.concat([x_embed_business, x_embed_user, x_embed_image], dim=-1)
+
+            x_embed = self.projection_model(x_embed_all)
         bottom_mlp_output = self.bottom_mlp(x_dense)
         
         # TODO change name of variables
