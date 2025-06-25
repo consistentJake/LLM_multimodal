@@ -1,0 +1,48 @@
+cd /workspace
+pip install torch transformers sentence_transformers torchmetrics
+pip install gdown pandas
+
+gdown --id 1RO9HQPSjyANxjQRmnPy98-4C7gkfkDTe
+gdown --id 1cnmsPrUr-rlgN1CfyUUGjxysyGqu8tJ_
+gdown --id 1EtqyUbRWhZOGBz5DkMGlmEmztWDZNehF
+gdown --id 1cvyNQq-vI9BY3C_Dm8fm8boFJmiHgBrj
+gdown --id 1BIkstRdaIKvtGVPDwSs-M8Qip_8avNK1
+gdown --id 1OAvLN8XDBlKR1-0kXD0TGY9X4RCCIotQ
+gdown --id 1odxUdxTApXKjAZEKVGd6o3GzPbiOaJFm
+gdown --id 1Gvp9gF2d_Z5U_WcNtdOAwvQLeJw-nDvB
+gdown --id 1aEpzPBy2nDyDQAn8cGzOFL91FoskpvkT
+gdown --id 1r11HJTFgOqGdwG1zUXmkYj4F61Tp-8rX
+gdown --id 1sHqnlRcMXVrGdJoZYURz_3cpD8pv3sDH
+
+
+gdown --id 1hRDjVJagEJ4VxfgbZPZ_q6qFWscokvDw
+
+gdown --id 1Df1Dw8wzFwHmDNPKM7HsDc1F-W7poyqi
+gdown --id 1o8kIo8mIzYtxCYpaVSntakspG1aJl_cd
+gdown --id 1J6DitZIYRWXW_kNy4idCMoDM5jwj98WI
+
+
+
+gdown --id 1sbBdxtpmvNnXY5tCQLxe6GmHz9a6iv_7
+gdown --id 1Ptfs6znU3HhLfEEbFj8eUncIoDXBI-VW
+gdown --id 1KboCVRoZy-DcDidHCATtcmFml3D7SpoW
+
+# similarity data 
+gdown --id 1FM0fBycuXlSP_nTE8ZQ-gbkRhYqBV_wW
+
+NIST Guide for Conducting risk assessment: https://csrc.nist.gov/pubs/sp/800/30/r1/final
+Sendi, A. S., & Cheriet, M. (2014, March). Cloud computing: A risk assessment model. In 2014 IEEE International Conference on Cloud Engineering (pp. 147-152). IEEE.
+https://www.vmware.com/topics/disaster-recovery-service-draas
+https://aws.amazon.com/architecture/well-architected
+https://aws.amazon.com/compliance/shared-responsibility-model/
+https://www.unitrends.com/blog/3-2-1-backup-sucks
+https://imsnucleii.com/blogs/the-state-of-backup-and-disaster-recovery-in-2024/
+https://it.umich.edu/information-technology-policies/general-policies/DS-12
+https://industrywired.com/best-practices-for-data-backup-and-recovery/
+https://www.ibm.com/topics/disaster-recovery
+https://project-management.com/understanding-responsibility-assignment-matrix-raci-matrix/
+https://learn.microsoft.com/en-us/azure/defender-for-cloud/secure-score-security-controls
+
+
+
+gdown --id 1XbvhC5DueZoNqIiEsFIOIVTFD2mazU81

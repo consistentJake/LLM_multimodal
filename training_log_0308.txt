@@ -1,0 +1,774 @@
+(base) ***@***-MacBook-Pro LLM_multimodal % python main.py
+origin_emb_features_all shape is torch.Size([3, 384])
+train_emb_features shape is torch.Size([57005, 3, 384])
+start to find top bottom similar items and users, num_items is 15290, num_users is 28912
+finish finding top bottom similar items and users
+finished loading data
+train dataset length is 57005, val dataset length is 17402
+Training started at 2025_03_08_23_18
+contrastive_loss_user:0.6930973529815674	, contrastive_loss_business:0.6878762245178223	, bce_loss:0.28151190280914307	, loss:2.1832785606384277
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 17236 num_false 166
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[   25,  1945],
+        [  141, 15291]])
+Validation at epoch 0: Loss=2.0935, Accuracy=0.8801, FP Rate=0.9873
+Epoch [1/1000], Validation Loss: 2.0935, Validation Accuracy: 0.8801
+Epoch [1/1000], Train Loss: 2.1794, Train Accuracy: 0.7707
+contrastive_loss_user:1.1133064031600952	, contrastive_loss_business:0.7754783630371094	, bce_loss:0.27312448620796204	, loss:2.8391525745391846
+Epoch [2/1000], Train Loss: 2.5332, Train Accuracy: 0.8128
+contrastive_loss_user:1.1642823219299316	, contrastive_loss_business:0.6546931266784668	, bce_loss:0.23848336935043335	, loss:2.701981782913208
+Epoch [3/1000], Train Loss: 3.0091, Train Accuracy: 0.8242
+contrastive_loss_user:0.820049524307251	, contrastive_loss_business:0.39033186435699463	, bce_loss:0.24967993795871735	, loss:1.9174425601959229
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 17306 num_false 96
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[   11,  1959],
+        [   85, 15347]])
+Validation at epoch 3: Loss=1.5994, Accuracy=0.8825, FP Rate=0.9944
+Epoch [4/1000], Validation Loss: 1.5994, Validation Accuracy: 0.8825
+Epoch [4/1000], Train Loss: 2.0854, Train Accuracy: 0.8313
+contrastive_loss_user:0.5862265825271606	, contrastive_loss_business:0.27584564685821533	, bce_loss:0.24284543097019196	, loss:1.4510459899902344
+Epoch [5/1000], Train Loss: 1.5359, Train Accuracy: 0.8391
+contrastive_loss_user:0.48849010467529297	, contrastive_loss_business:0.19744053483009338	, bce_loss:0.24151408672332764	, loss:1.217977523803711
+Epoch [6/1000], Train Loss: 1.2196, Train Accuracy: 0.8429
+contrastive_loss_user:0.38898175954818726	, contrastive_loss_business:0.16972076892852783	, bce_loss:0.2322661578655243	, loss:1.038748860359192
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 17345 num_false 57
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[   20,  1950],
+        [   37, 15395]])
+Validation at epoch 6: Loss=0.8450, Accuracy=0.8858, FP Rate=0.9898
+Epoch [7/1000], Validation Loss: 0.8450, Validation Accuracy: 0.8858
+Epoch [7/1000], Train Loss: 1.0161, Train Accuracy: 0.8502
+contrastive_loss_user:0.28967466950416565	, contrastive_loss_business:0.10933591425418854	, bce_loss:0.2178463190793991	, loss:0.8100944757461548
+Epoch [8/1000], Train Loss: 0.8681, Train Accuracy: 0.8509
+contrastive_loss_user:0.29641491174697876	, contrastive_loss_business:0.08956176042556763	, bce_loss:0.23985105752944946	, loss:0.8218755125999451
+Epoch [9/1000], Train Loss: 0.7576, Train Accuracy: 0.8518
+contrastive_loss_user:0.2223353087902069	, contrastive_loss_business:0.05912236124277115	, bce_loss:0.2326124608516693	, loss:0.6751085519790649
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 17306 num_false 96
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[   49,  1921],
+        [   47, 15385]])
+Validation at epoch 9: Loss=0.5734, Accuracy=0.8869, FP Rate=0.9751
+Epoch [10/1000], Validation Loss: 0.5734, Validation Accuracy: 0.8869
+Epoch [10/1000], Train Loss: 0.6639, Train Accuracy: 0.8540
+contrastive_loss_user:0.18867337703704834	, contrastive_loss_business:0.04864882305264473	, bce_loss:0.25063180923461914	, loss:0.6408112645149231
+Epoch [11/1000], Train Loss: 0.5966, Train Accuracy: 0.8643
+contrastive_loss_user:0.13821515440940857	, contrastive_loss_business:0.03963334113359451	, bce_loss:0.21849314868450165	, loss:0.5205002427101135
+Epoch [12/1000], Train Loss: 0.5375, Train Accuracy: 0.8800
+contrastive_loss_user:0.13234306871891022	, contrastive_loss_business:0.03529388830065727	, bce_loss:0.23117424547672272	, loss:0.5237434506416321
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 17193 num_false 209
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[  147,  1823],
+        [   62, 15370]])
+Validation at epoch 12: Loss=0.4223, Accuracy=0.8917, FP Rate=0.9254
+Epoch [13/1000], Validation Loss: 0.4223, Validation Accuracy: 0.8917
+Epoch [13/1000], Train Loss: 0.4906, Train Accuracy: 0.8810
+contrastive_loss_user:0.09959939867258072	, contrastive_loss_business:0.028033945709466934	, bce_loss:0.2049868255853653	, loss:0.43681731820106506
+
+Epoch [14/1000], Train Loss: 0.4589, Train Accuracy: 0.8804
+contrastive_loss_user:0.09735481441020966	, contrastive_loss_business:0.027888579294085503	, bce_loss:0.2168744057416916	, loss:0.4492901861667633
+Epoch [15/1000], Train Loss: 0.4289, Train Accuracy: 0.8790
+contrastive_loss_user:0.09996999800205231	, contrastive_loss_business:0.022789452224969864	, bce_loss:0.24207983911037445	, loss:0.479129433631897
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 16951 num_false 451
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[  358,  1612],
+        [   93, 15339]])
+Validation at epoch 15: Loss=0.3438, Accuracy=0.9020, FP Rate=0.8183
+Epoch [16/1000], Validation Loss: 0.3438, Validation Accuracy: 0.9020
+Epoch [16/1000], Train Loss: 0.4002, Train Accuracy: 0.8784
+contrastive_loss_user:0.07748249918222427	, contrastive_loss_business:0.022381050512194633	, bce_loss:0.20144779980182648	, loss:0.3957006335258484
+Epoch [17/1000], Train Loss: 0.3776, Train Accuracy: 0.8792
+contrastive_loss_user:0.07505045086145401	, contrastive_loss_business:0.01993708498775959	, bce_loss:0.19296470284461975	, loss:0.3781566321849823
+Epoch [18/1000], Train Loss: 0.3589, Train Accuracy: 0.8808
+contrastive_loss_user:0.07256900519132614	, contrastive_loss_business:0.024017293006181717	, bce_loss:0.18700966238975525	, loss:0.37243568897247314
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 16279 num_false 1123
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[  795,  1175],
+        [  328, 15104]])
+Validation at epoch 18: Loss=0.2845, Accuracy=0.9136, FP Rate=0.5964
+Epoch [19/1000], Validation Loss: 0.2845, Validation Accuracy: 0.9136
+Epoch [19/1000], Train Loss: 0.3410, Train Accuracy: 0.8832
+contrastive_loss_user:0.05314531549811363	, contrastive_loss_business:0.015111585147678852	, bce_loss:0.16242535412311554	, loss:0.3029461205005646
+Epoch [20/1000], Train Loss: 0.3248, Train Accuracy: 0.8861
+contrastive_loss_user:0.045776404440402985	, contrastive_loss_business:0.01283254474401474	, bce_loss:0.1807791292667389	, loss:0.31437918543815613
+Epoch [21/1000], Train Loss: 0.3059, Train Accuracy: 0.8903
+contrastive_loss_user:0.03566661849617958	, contrastive_loss_business:0.01481796707957983	, bce_loss:0.15905097126960754	, loss:0.275175005197525
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 16020 num_false 1382
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1016,   954],
+        [  366, 15066]])
+Validation at epoch 21: Loss=0.2417, Accuracy=0.9241, FP Rate=0.4843
+Epoch [22/1000], Validation Loss: 0.2417, Validation Accuracy: 0.9241
+Epoch [22/1000], Train Loss: 0.2932, Train Accuracy: 0.8924
+contrastive_loss_user:0.04318622127175331	, contrastive_loss_business:0.019478201866149902	, bce_loss:0.1556592732667923	, loss:0.28671616315841675
+Epoch [23/1000], Train Loss: 0.2770, Train Accuracy: 0.8973
+contrastive_loss_user:0.040809959173202515	, contrastive_loss_business:0.011643227189779282	, bce_loss:0.14837926626205444	, loss:0.2637455463409424
+Epoch [24/1000], Train Loss: 0.2730, Train Accuracy: 0.9025
+contrastive_loss_user:0.04368721693754196	, contrastive_loss_business:0	, bce_loss:0.14159610867500305	, loss:0.24332548677921295
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15861 num_false 1541
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1215,   755],
+        [  326, 15106]])
+Validation at epoch 24: Loss=0.2011, Accuracy=0.9379, FP Rate=0.3832
+Epoch [25/1000], Validation Loss: 0.2011, Validation Accuracy: 0.9379
+Epoch [25/1000], Train Loss: 0.2568, Train Accuracy: 0.9075
+contrastive_loss_user:0.04000848904252052	, contrastive_loss_business:0.016581635922193527	, bce_loss:0.14203807711601257	, loss:0.26085078716278076
+Epoch [26/1000], Train Loss: 0.2443, Train Accuracy: 0.9094
+contrastive_loss_user:0.037382133305072784	, contrastive_loss_business:0.00830398965626955	, bce_loss:0.14258012175559998	, loss:0.24724282324314117
+Epoch [27/1000], Train Loss: 0.2347, Train Accuracy: 0.9147
+contrastive_loss_user:0.04867839813232422	, contrastive_loss_business:0.012042110785841942	, bce_loss:0.13181398808956146	, loss:0.25284817814826965
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15743 num_false 1659
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1385,   585],
+        [  274, 15158]])
+Validation at epoch 27: Loss=0.1574, Accuracy=0.9506, FP Rate=0.2970
+Epoch [28/1000], Validation Loss: 0.1574, Validation Accuracy: 0.9506
+Epoch [28/1000], Train Loss: 0.2214, Train Accuracy: 0.9183
+contrastive_loss_user:0.03243032097816467	, contrastive_loss_business:0.008901669643819332	, bce_loss:0.1207098439335823	, loss:0.21280331909656525
+Epoch [29/1000], Train Loss: 0.2092, Train Accuracy: 0.9221
+contrastive_loss_user:0.0286740493029356	, contrastive_loss_business:0.015886949375271797	, bce_loss:0.1237083300948143	, loss:0.2209816575050354
+Epoch [30/1000], Train Loss: 0.2076, Train Accuracy: 0.9236
+contrastive_loss_user:0.02877395786345005	, contrastive_loss_business:0.00878763385117054	, bce_loss:0.11856456100940704	, loss:0.20503447949886322
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15628 num_false 1774
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1467,   503],
+        [  307, 15125]])
+Validation at epoch 30: Loss=0.1544, Accuracy=0.9535, FP Rate=0.2553
+Epoch [31/1000], Validation Loss: 0.1544, Validation Accuracy: 0.9535
+Epoch [31/1000], Train Loss: 0.2001, Train Accuracy: 0.9266
+contrastive_loss_user:0.025235135108232498	, contrastive_loss_business:0.009372774511575699	, bce_loss:0.10013747215270996	, loss:0.1769559383392334
+Epoch [32/1000], Train Loss: 0.1926, Train Accuracy: 0.9304
+contrastive_loss_user:0.02136032097041607	, contrastive_loss_business:0.00930873118340969	, bce_loss:0.10576815903186798	, loss:0.17917774617671967
+Epoch [33/1000], Train Loss: 0.1799, Train Accuracy: 0.9321
+contrastive_loss_user:0.01816636323928833	, contrastive_loss_business:0.010268633253872395	, bce_loss:0.1039169579744339	, loss:0.17381274700164795
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15593 num_false 1809
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1567,   403],
+        [  242, 15190]])
+Validation at epoch 33: Loss=0.1271, Accuracy=0.9629, FP Rate=0.2046
+Epoch [34/1000], Validation Loss: 0.1271, Validation Accuracy: 0.9629
+Epoch [34/1000], Train Loss: 0.1763, Train Accuracy: 0.9350
+contrastive_loss_user:0.018865246325731277	, contrastive_loss_business:0.010610202327370644	, bce_loss:0.0921894907951355	, loss:0.15977789461612701
+Epoch [35/1000], Train Loss: 0.1694, Train Accuracy: 0.9388
+contrastive_loss_user:0.029806770384311676	, contrastive_loss_business:0.007234211545437574	, bce_loss:0.10294272750616074	, loss:0.1838352382183075
+Epoch [36/1000], Train Loss: 0.1678, Train Accuracy: 0.9378
+contrastive_loss_user:0.018885647878050804	, contrastive_loss_business:0.009830355644226074	, bce_loss:0.08986788243055344	, loss:0.155731663107872
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15554 num_false 1848
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1632,   338],
+        [  216, 15216]])
+Validation at epoch 36: Loss=0.1097, Accuracy=0.9682, FP Rate=0.1716
+Epoch [37/1000], Validation Loss: 0.1097, Validation Accuracy: 0.9682
+Epoch [37/1000], Train Loss: 0.1635, Train Accuracy: 0.9405
+contrastive_loss_user:0.03203975409269333	, contrastive_loss_business:0.011694388464093208	, bce_loss:0.07743065059185028	, loss:0.1591210663318634
+Epoch [38/1000], Train Loss: 0.1561, Train Accuracy: 0.9429
+contrastive_loss_user:0.023800576105713844	, contrastive_loss_business:0.004574344959110022	, bce_loss:0.06953921914100647	, loss:0.12858688831329346
+Epoch [39/1000], Train Loss: 0.1516, Train Accuracy: 0.9447
+contrastive_loss_user:0.015390669927001	, contrastive_loss_business:0.008124318905174732	, bce_loss:0.08037009835243225	, loss:0.13642829656600952
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15465 num_false 1937
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1739,   231],
+        [  198, 15234]])
+Validation at epoch 39: Loss=0.0910, Accuracy=0.9753, FP Rate=0.1173
+Epoch [40/1000], Validation Loss: 0.0910, Validation Accuracy: 0.9753
+Epoch [40/1000], Train Loss: 0.1467, Train Accuracy: 0.9478
+contrastive_loss_user:0.03592507168650627	, contrastive_loss_business:0.0057555511593818665	, bce_loss:0.0779043585062027	, loss:0.1570463627576828
+Epoch [41/1000], Train Loss: 0.1501, Train Accuracy: 0.9472
+contrastive_loss_user:0.039602264761924744	, contrastive_loss_business:0.018038706853985786	, bce_loss:0.07480500638484955	, loss:0.17393621802330017
+Epoch [42/1000], Train Loss: 0.1508, Train Accuracy: 0.9478
+contrastive_loss_user:0.03719525784254074	, contrastive_loss_business:0.008180497214198112	, bce_loss:0.07580266147851944	, loss:0.15913896262645721
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15468 num_false 1934
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1776,   194],
+        [  158, 15274]])
+Validation at epoch 42: Loss=0.0848, Accuracy=0.9798, FP Rate=0.0985
+Epoch [43/1000], Validation Loss: 0.0848, Validation Accuracy: 0.9798
+Epoch [43/1000], Train Loss: 0.1384, Train Accuracy: 0.9523
+contrastive_loss_user:0.0183858759701252	, contrastive_loss_business:0.008457193151116371	, bce_loss:0.06833275407552719	, loss:0.12499076128005981
+Epoch [44/1000], Train Loss: 0.1316, Train Accuracy: 0.9536
+contrastive_loss_user:0	, contrastive_loss_business:0.01010320708155632	, bce_loss:0.08129046857357025	, loss:0.12002380192279816
+Epoch [45/1000], Train Loss: 0.1391, Train Accuracy: 0.9537
+contrastive_loss_user:0.04561961814761162	, contrastive_loss_business:0.004695221781730652	, bce_loss:0.06823074817657471	, loss:0.15568137168884277
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15409 num_false 1993
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1802,   168],
+        [  191, 15241]])
+Validation at epoch 45: Loss=0.0771, Accuracy=0.9794, FP Rate=0.0853
+Epoch [46/1000], Validation Loss: 0.0771, Validation Accuracy: 0.9794
+Epoch [46/1000], Train Loss: 0.1392, Train Accuracy: 0.9535
+contrastive_loss_user:0.03012530319392681	, contrastive_loss_business:0.015579174272716045	, bce_loss:0.07136997580528259	, loss:0.15374937653541565
+Epoch [47/1000], Train Loss: 0.1279, Train Accuracy: 0.9561
+contrastive_loss_user:0.03225843608379364	, contrastive_loss_business:0.008508458733558655	, bce_loss:0.05896901711821556	, loss:0.13097934424877167
+Epoch [48/1000], Train Loss: 0.1174, Train Accuracy: 0.9592
+contrastive_loss_user:0.028819184750318527	, contrastive_loss_business:0.003849306143820286	, bce_loss:0.07256579399108887	, loss:0.13820014894008636
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15472 num_false 1930
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1790,   180],
+        [  140, 15292]])
+Validation at epoch 48: Loss=0.0983, Accuracy=0.9816, FP Rate=0.0914
+Epoch [49/1000], Validation Loss: 0.0983, Validation Accuracy: 0.9816
+Epoch [49/1000], Train Loss: 0.1231, Train Accuracy: 0.9591
+contrastive_loss_user:0.04518920183181763	, contrastive_loss_business:0	, bce_loss:0.057421885430812836	, loss:0.1347551941871643
+Epoch [50/1000], Train Loss: 0.1239, Train Accuracy: 0.9587
+contrastive_loss_user:0.019023284316062927	, contrastive_loss_business:0.010633481666445732	, bce_loss:0.04905027523636818	, loss:0.10336293280124664
+Epoch [51/1000], Train Loss: 0.1214, Train Accuracy: 0.9601
+contrastive_loss_user:0.03867688030004501	, contrastive_loss_business:0.008318687789142132	, bce_loss:0.055997271090745926	, loss:0.1352565437555313
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15432 num_false 1970
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1851,   119],
+        [  119, 15313]])
+Validation at epoch 51: Loss=0.0595, Accuracy=0.9863, FP Rate=0.0604
+Epoch [52/1000], Validation Loss: 0.0595, Validation Accuracy: 0.9863
+Epoch [52/1000], Train Loss: 0.1211, Train Accuracy: 0.9610
+contrastive_loss_user:0.009687047451734543	, contrastive_loss_business:0.013756675645709038	, bce_loss:0.06045897305011749	, loss:0.11018618941307068
+Epoch [53/1000], Train Loss: 0.1157, Train Accuracy: 0.9626
+contrastive_loss_user:0.018685881048440933	, contrastive_loss_business:0.015062767080962658	, bce_loss:0.06154610961675644	, loss:0.12514694035053253
+Epoch [54/1000], Train Loss: 0.1200, Train Accuracy: 0.9624
+contrastive_loss_user:0.025169072672724724	, contrastive_loss_business:0.018358562141656876	, bce_loss:0.04742127284407616	, loss:0.11943971365690231
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15442 num_false 1960
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1839,   131],
+        [  121, 15311]])
+Validation at epoch 54: Loss=0.0714, Accuracy=0.9855, FP Rate=0.0665
+Epoch [55/1000], Validation Loss: 0.0714, Validation Accuracy: 0.9855
+Epoch [55/1000], Train Loss: 0.1133, Train Accuracy: 0.9640
+contrastive_loss_user:0.03540705144405365	, contrastive_loss_business:0.023030759766697884	, bce_loss:0.0536683052778244	, loss:0.14722466468811035
+Epoch [56/1000], Train Loss: 0.1137, Train Accuracy: 0.9646
+contrastive_loss_user:0.027608539909124374	, contrastive_loss_business:0.011608188040554523	, bce_loss:0.05263430252671242	, loss:0.12062443792819977
+Epoch [57/1000], Train Loss: 0.1164, Train Accuracy: 0.9645
+contrastive_loss_user:0.02743390202522278	, contrastive_loss_business:0	, bce_loss:0.053960833698511124	, loss:0.10689258575439453
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15376 num_false 2026
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1891,    79],
+        [  135, 15297]])
+Validation at epoch 57: Loss=0.0640, Accuracy=0.9877, FP Rate=0.0401
+Epoch [58/1000], Validation Loss: 0.0640, Validation Accuracy: 0.9877
+Epoch [58/1000], Train Loss: 0.1141, Train Accuracy: 0.9659
+contrastive_loss_user:0.03506939858198166	, contrastive_loss_business:0.010088550858199596	, bce_loss:0.057722557336091995	, loss:0.13510902225971222
+Epoch [59/1000], Train Loss: 0.1221, Train Accuracy: 0.9657
+contrastive_loss_user:0.0265355221927166	, contrastive_loss_business:0.008285214193165302	, bce_loss:0.048828862607479095	, loss:0.10985381156206131
+Epoch [60/1000], Train Loss: 0.1079, Train Accuracy: 0.9665
+contrastive_loss_user:0.0567142553627491	, contrastive_loss_business:0.006291714962571859	, bce_loss:0.04479396715760231	, loss:0.14156951010227203
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15452 num_false 1950
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1864,   106],
+        [   86, 15346]])
+Validation at epoch 60: Loss=0.0712, Accuracy=0.9890, FP Rate=0.0538
+Epoch [61/1000], Validation Loss: 0.0712, Validation Accuracy: 0.9890
+Epoch [61/1000], Train Loss: 0.1243, Train Accuracy: 0.9661
+contrastive_loss_user:0.026886500418186188	, contrastive_loss_business:0.016944482922554016	, bce_loss:0.04658529907464981	, loss:0.11874023079872131
+Epoch [62/1000], Train Loss: 0.1100, Train Accuracy: 0.9682
+contrastive_loss_user:0.04807000607252121	, contrastive_loss_business:0.009031577035784721	, bce_loss:0.0531541109085083	, loss:0.14479456841945648
+Epoch [63/1000], Train Loss: 0.1211, Train Accuracy: 0.9673
+contrastive_loss_user:0.038081247359514236	, contrastive_loss_business:0.007010056637227535	, bce_loss:0.05091319605708122	, loss:0.1260790228843689
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15356 num_false 2046
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1913,    57],
+        [  133, 15299]])
+Validation at epoch 63: Loss=0.0616, Accuracy=0.9891, FP Rate=0.0289
+Epoch [64/1000], Validation Loss: 0.0616, Validation Accuracy: 0.9891
+Epoch [64/1000], Train Loss: 0.1100, Train Accuracy: 0.9679
+contrastive_loss_user:0	, contrastive_loss_business:0.007459536194801331	, bce_loss:0.040465276688337326	, loss:0.06293781846761703
+Epoch [65/1000], Train Loss: 0.1012, Train Accuracy: 0.9702
+contrastive_loss_user:0.017344359308481216	, contrastive_loss_business:0.007586085703223944	, bce_loss:0.04896050691604614	, loss:0.0970381498336792
+Epoch [66/1000], Train Loss: 0.0978, Train Accuracy: 0.9718
+contrastive_loss_user:0.05247770622372627	, contrastive_loss_business:0.005987059790641069	, bce_loss:0.04514343664050102	, loss:0.13606469333171844
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15426 num_false 1976
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1882,    88],
+        [   94, 15338]])
+Validation at epoch 66: Loss=0.1002, Accuracy=0.9895, FP Rate=0.0447
+Epoch [67/1000], Validation Loss: 0.1002, Validation Accuracy: 0.9895
+Epoch [67/1000], Train Loss: 0.1163, Train Accuracy: 0.9701
+contrastive_loss_user:0.03730915114283562	, contrastive_loss_business:0.00390769075602293	, bce_loss:0.038726311177015305	, loss:0.104986272752285
+Epoch [68/1000], Train Loss: 0.1118, Train Accuracy: 0.9713
+contrastive_loss_user:0.031075889244675636	, contrastive_loss_business:0.006378158461302519	, bce_loss:0.04312577471137047	, loss:0.10582238435745239
+Epoch [69/1000], Train Loss: 0.0946, Train Accuracy: 0.9705
+contrastive_loss_user:0.02152872644364834	, contrastive_loss_business:0.006178297568112612	, bce_loss:0.06954656541347504	, loss:0.12771941721439362
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15443 num_false 1959
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1884,    86],
+        [   75, 15357]])
+Validation at epoch 69: Loss=0.0910, Accuracy=0.9907, FP Rate=0.0437
+Epoch [70/1000], Validation Loss: 0.0910, Validation Accuracy: 0.9907
+Epoch [70/1000], Train Loss: 0.0988, Train Accuracy: 0.9729
+contrastive_loss_user:0.018908217549324036	, contrastive_loss_business:0.003962050657719374	, bce_loss:0.03666134923696518	, loss:0.07818058878183365
+Epoch [71/1000], Train Loss: 0.1023, Train Accuracy: 0.9724
+contrastive_loss_user:0.013114254921674728	, contrastive_loss_business:0	, bce_loss:0.03746809437870979	, loss:0.06642785668373108
+Epoch [72/1000], Train Loss: 0.0952, Train Accuracy: 0.9753
+contrastive_loss_user:0.012804346159100533	, contrastive_loss_business:0.006429462227970362	, bce_loss:0.04319620877504349	, loss:0.0819869413971901
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15430 num_false 1972
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1912,    58],
+        [   60, 15372]])
+Validation at epoch 72: Loss=0.0459, Accuracy=0.9932, FP Rate=0.0294
+Epoch [73/1000], Validation Loss: 0.0459, Validation Accuracy: 0.9932
+Epoch [73/1000], Train Loss: 0.0885, Train Accuracy: 0.9738
+contrastive_loss_user:0	, contrastive_loss_business:0.009709721431136131	, bce_loss:0.04053594544529915	, loss:0.06598570942878723
+Epoch [74/1000], Train Loss: 0.0942, Train Accuracy: 0.9748
+contrastive_loss_user:0	, contrastive_loss_business:0.008572040125727654	, bce_loss:0.03172058239579201	, loss:0.052914757281541824
+Epoch [75/1000], Train Loss: 0.0925, Train Accuracy: 0.9745
+contrastive_loss_user:0.04780002310872078	, contrastive_loss_business:0.005210010334849358	, bce_loss:0.031024456024169922	, loss:0.11035926640033722
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15425 num_false 1977
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1929,    41],
+        [   48, 15384]])
+Validation at epoch 75: Loss=0.0513, Accuracy=0.9949, FP Rate=0.0208
+Epoch [76/1000], Validation Loss: 0.0513, Validation Accuracy: 0.9949
+Epoch [76/1000], Train Loss: 0.0967, Train Accuracy: 0.9757
+contrastive_loss_user:0	, contrastive_loss_business:0.007370425388216972	, bce_loss:0.03787914663553238	, loss:0.05942452698945999
+Epoch [77/1000], Train Loss: 0.0884, Train Accuracy: 0.9775
+contrastive_loss_user:0	, contrastive_loss_business:0.0034305418375879526	, bce_loss:0.03524824231863022	, loss:0.050795361399650574
+Epoch [78/1000], Train Loss: 0.0922, Train Accuracy: 0.9766
+contrastive_loss_user:0	, contrastive_loss_business:0.008415798656642437	, bce_loss:0.035089053213596344	, loss:0.057133253663778305
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15412 num_false 1990
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1937,    33],
+        [   53, 15379]])
+Validation at epoch 78: Loss=0.0491, Accuracy=0.9951, FP Rate=0.0168
+Epoch [79/1000], Validation Loss: 0.0491, Validation Accuracy: 0.9951
+Epoch [79/1000], Train Loss: 0.1033, Train Accuracy: 0.9752
+contrastive_loss_user:0	, contrastive_loss_business:0.0150306960567832	, bce_loss:0.030024230480194092	, loss:0.05916890501976013
+Epoch [80/1000], Train Loss: 0.0931, Train Accuracy: 0.9761
+contrastive_loss_user:0.05555558204650879	, contrastive_loss_business:0.013463947921991348	, bce_loss:0.043731313198804855	, loss:0.14807134866714478
+Epoch [81/1000], Train Loss: 0.0805, Train Accuracy: 0.9779
+contrastive_loss_user:0.016232427209615707	, contrastive_loss_business:0.0030333860777318478	, bce_loss:0.041381318122148514	, loss:0.0796455517411232
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15391 num_false 2011
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1930,    40],
+        [   81, 15351]])
+Validation at epoch 81: Loss=0.0494, Accuracy=0.9930, FP Rate=0.0203
+Epoch [82/1000], Validation Loss: 0.0494, Validation Accuracy: 0.9930
+Epoch [82/1000], Train Loss: 0.0774, Train Accuracy: 0.9779
+contrastive_loss_user:0	, contrastive_loss_business:0.010089299641549587	, bce_loss:0.03419545665383339	, loss:0.05815747007727623
+Epoch [83/1000], Train Loss: 0.0836, Train Accuracy: 0.9792
+contrastive_loss_user:0.032642632722854614	, contrastive_loss_business:0	, bce_loss:0.03354587405920029	, loss:0.08692282438278198
+Epoch [84/1000], Train Loss: 0.0995, Train Accuracy: 0.9765
+contrastive_loss_user:0	, contrastive_loss_business:0.007761857006698847	, bce_loss:0.04025769233703613	, loss:0.06306223571300507
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15415 num_false 1987
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1929,    41],
+        [   58, 15374]])
+Validation at epoch 84: Loss=0.0799, Accuracy=0.9943, FP Rate=0.0208
+Epoch [85/1000], Validation Loss: 0.0799, Validation Accuracy: 0.9943
+Epoch [85/1000], Train Loss: 0.0962, Train Accuracy: 0.9765
+contrastive_loss_user:0.04074065014719963	, contrastive_loss_business:0.006182238459587097	, bce_loss:0.03196320682764053	, loss:0.10359808802604675
+Epoch [86/1000], Train Loss: 0.0943, Train Accuracy: 0.9780
+contrastive_loss_user:0.012397768907248974	, contrastive_loss_business:0.010778142139315605	, bce_loss:0.030104637145996094	, loss:0.06997130066156387
+Epoch [87/1000], Train Loss: 0.0848, Train Accuracy: 0.9792
+contrastive_loss_user:0	, contrastive_loss_business:0	, bce_loss:0.027199694886803627	, loss:0.03572031483054161
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15376 num_false 2026
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1954,    16],
+        [   72, 15360]])
+Validation at epoch 87: Loss=0.0439, Accuracy=0.9949, FP Rate=0.0081
+Epoch [88/1000], Validation Loss: 0.0439, Validation Accuracy: 0.9949
+Epoch [88/1000], Train Loss: 0.0877, Train Accuracy: 0.9792
+contrastive_loss_user:0.05563227832317352	, contrastive_loss_business:0.011000626720488071	, bce_loss:0.031061723828315735	, loss:0.12829861044883728
+Epoch [89/1000], Train Loss: 0.0799, Train Accuracy: 0.9797
+contrastive_loss_user:0	, contrastive_loss_business:0.006034834310412407	, bce_loss:0.031354840844869614	, loss:0.04910242557525635
+Epoch [90/1000], Train Loss: 0.0857, Train Accuracy: 0.9793
+contrastive_loss_user:0.029183711856603622	, contrastive_loss_business:0.005566801410168409	, bce_loss:0.027479853481054306	, loss:0.08172475546598434
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15410 num_false 1992
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1941,    29],
+        [   51, 15381]])
+Validation at epoch 90: Loss=0.0468, Accuracy=0.9954, FP Rate=0.0147
+Epoch [91/1000], Validation Loss: 0.0468, Validation Accuracy: 0.9954
+Epoch [91/1000], Train Loss: 0.1026, Train Accuracy: 0.9795
+contrastive_loss_user:0.022110596299171448	, contrastive_loss_business:0.011846236884593964	, bce_loss:0.04533187672495842	, loss:0.10412681847810745
+Epoch [92/1000], Train Loss: 0.0771, Train Accuracy: 0.9821
+contrastive_loss_user:0.025149548426270485	, contrastive_loss_business:0.008832456544041634	, bce_loss:0.02714214101433754	, loss:0.08027199655771255
+Epoch [93/1000], Train Loss: 0.0749, Train Accuracy: 0.9799
+contrastive_loss_user:0.04652693122625351	, contrastive_loss_business:0.008801833726465702	, bce_loss:0.04870891571044922	, loss:0.13662870228290558
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15409 num_false 1993
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1942,    28],
+        [   51, 15381]])
+Validation at epoch 93: Loss=0.0546, Accuracy=0.9955, FP Rate=0.0142
+Epoch [94/1000], Validation Loss: 0.0546, Validation Accuracy: 0.9955
+Epoch [94/1000], Train Loss: 0.0857, Train Accuracy: 0.9810
+contrastive_loss_user:0.03726409748196602	, contrastive_loss_business:0	, bce_loss:0.03347192704677582	, loss:0.09289491176605225
+Epoch [95/1000], Train Loss: 0.0805, Train Accuracy: 0.9817
+contrastive_loss_user:0.01953699067234993	, contrastive_loss_business:0.00942949578166008	, bce_loss:0.0416964627802372	, loss:0.09279894083738327
+Epoch [96/1000], Train Loss: 0.0687, Train Accuracy: 0.9824
+contrastive_loss_user:0	, contrastive_loss_business:0.00487508624792099	, bce_loss:0.033576544374227524	, loss:0.05049705132842064
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15418 num_false 1984
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1934,    36],
+        [   50, 15382]])
+Validation at epoch 96: Loss=0.0954, Accuracy=0.9951, FP Rate=0.0183
+Epoch [97/1000], Validation Loss: 0.0954, Validation Accuracy: 0.9951
+Epoch [97/1000], Train Loss: 0.0888, Train Accuracy: 0.9820
+contrastive_loss_user:0	, contrastive_loss_business:0	, bce_loss:0.02915360778570175	, loss:0.03828631341457367
+Epoch [98/1000], Train Loss: 0.0915, Train Accuracy: 0.9801
+contrastive_loss_user:0.03988250717520714	, contrastive_loss_business:0.0074448250234127045	, bce_loss:0.0334709957242012	, loss:0.10610934346914291
+Epoch [99/1000], Train Loss: 0.0828, Train Accuracy: 0.9812
+contrastive_loss_user:0.030039429664611816	, contrastive_loss_business:0.0026550625916570425	, bce_loss:0.03451463207602501	, loss:0.08826316148042679
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15414 num_false 1988
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1941,    29],
+        [   47, 15385]])
+Validation at epoch 99: Loss=0.0437, Accuracy=0.9956, FP Rate=0.0147
+Epoch [100/1000], Validation Loss: 0.0437, Validation Accuracy: 0.9956
+Epoch [100/1000], Train Loss: 0.0903, Train Accuracy: 0.9814
+contrastive_loss_user:0.035550422966480255	, contrastive_loss_business:0.01585918851196766	, bce_loss:0.03652215003967285	, loss:0.11547741293907166
+Epoch [101/1000], Train Loss: 0.0778, Train Accuracy: 0.9826
+contrastive_loss_user:0.04388115555047989	, contrastive_loss_business:0.011393203400075436	, bce_loss:0.03094794973731041	, loss:0.11323244869709015
+Epoch [102/1000], Train Loss: 0.0747, Train Accuracy: 0.9820
+contrastive_loss_user:0.06977318227291107	, contrastive_loss_business:0	, bce_loss:0.024109136313199997	, loss:0.12329204380512238
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15423 num_false 1979
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1936,    34],
+        [   43, 15389]])
+Validation at epoch 102: Loss=0.0475, Accuracy=0.9956, FP Rate=0.0173
+Epoch [103/1000], Validation Loss: 0.0475, Validation Accuracy: 0.9956
+Epoch [103/1000], Train Loss: 0.0771, Train Accuracy: 0.9832
+contrastive_loss_user:0.016964232549071312	, contrastive_loss_business:0.015361177735030651	, bce_loss:0.03800409659743309	, loss:0.09236104041337967
+Epoch [104/1000], Train Loss: 0.0802, Train Accuracy: 0.9820
+contrastive_loss_user:0	, contrastive_loss_business:0.0029325480572879314	, bce_loss:0.015244444832205772	, loss:0.023871148005127907
+Epoch [105/1000], Train Loss: 0.0801, Train Accuracy: 0.9829
+contrastive_loss_user:0.024614732712507248	, contrastive_loss_business:0.008371429517865181	, bce_loss:0.02453961968421936	, loss:0.07554640620946884
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15406 num_false 1996
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1943,    27],
+        [   53, 15379]])
+Validation at epoch 105: Loss=0.0533, Accuracy=0.9954, FP Rate=0.0137
+Epoch [106/1000], Validation Loss: 0.0533, Validation Accuracy: 0.9954
+Epoch [106/1000], Train Loss: 0.0739, Train Accuracy: 0.9836
+contrastive_loss_user:0.047025807201862335	, contrastive_loss_business:0.002240927889943123	, bce_loss:0.02386734075844288	, loss:0.09604417532682419
+Epoch [107/1000], Train Loss: 0.0850, Train Accuracy: 0.9834
+contrastive_loss_user:0.02642991952598095	, contrastive_loss_business:0.008431795053184032	, bce_loss:0.024945806711912155	, loss:0.07854291796684265
+Epoch [108/1000], Train Loss: 0.0613, Train Accuracy: 0.9849
+contrastive_loss_user:0.04334703087806702	, contrastive_loss_business:0.04674005135893822	, bce_loss:0.018483251333236694	, loss:0.1425812542438507
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15414 num_false 1988
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1950,    20],
+        [   38, 15394]])
+Validation at epoch 108: Loss=0.0344, Accuracy=0.9967, FP Rate=0.0102
+Epoch [109/1000], Validation Loss: 0.0344, Validation Accuracy: 0.9967
+Epoch [109/1000], Train Loss: 0.0836, Train Accuracy: 0.9844
+contrastive_loss_user:0	, contrastive_loss_business:0.0024349174927920103	, bce_loss:0.022396590560674667	, loss:0.03261026740074158
+Epoch [110/1000], Train Loss: 0.0649, Train Accuracy: 0.9850
+contrastive_loss_user:0.025213543325662613	, contrastive_loss_business:0.006134904455393553	, bce_loss:0.026539271697402	, loss:0.0760217234492302
+Epoch [111/1000], Train Loss: 0.0687, Train Accuracy: 0.9837
+contrastive_loss_user:0.02499837800860405	, contrastive_loss_business:0.005877505522221327	, bce_loss:0.02955850027501583	, loss:0.07936615496873856
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15413 num_false 1989
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1939,    31],
+        [   50, 15382]])
+Validation at epoch 111: Loss=0.0457, Accuracy=0.9953, FP Rate=0.0157
+Epoch [112/1000], Validation Loss: 0.0457, Validation Accuracy: 0.9953
+Epoch [112/1000], Train Loss: 0.0665, Train Accuracy: 0.9866
+contrastive_loss_user:0.044311895966529846	, contrastive_loss_business:0.004135495983064175	, bce_loss:0.025897564366459846	, loss:0.09763438254594803
+Epoch [113/1000], Train Loss: 0.0778, Train Accuracy: 0.9849
+contrastive_loss_user:0.05208786949515343	, contrastive_loss_business:0	, bce_loss:0.025322817265987396	, loss:0.10166049003601074
+Epoch [114/1000], Train Loss: 0.0765, Train Accuracy: 0.9849
+contrastive_loss_user:0	, contrastive_loss_business:0.00947481393814087	, bce_loss:0.020224537700414658	, loss:0.03900301828980446
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15415 num_false 1987
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1949,    21],
+        [   38, 15394]])
+Validation at epoch 114: Loss=0.0451, Accuracy=0.9966, FP Rate=0.0107
+Epoch [115/1000], Validation Loss: 0.0451, Validation Accuracy: 0.9966
+Epoch [115/1000], Train Loss: 0.0743, Train Accuracy: 0.9845
+contrastive_loss_user:0.048411060124635696	, contrastive_loss_business:0.003617152338847518	, bce_loss:0.025577008724212646	, loss:0.10191595554351807
+Epoch [116/1000], Train Loss: 0.0747, Train Accuracy: 0.9843
+contrastive_loss_user:0	, contrastive_loss_business:0.0063423095270991325	, bce_loss:0.03531244024634361	, loss:0.05470358580350876
+Epoch [117/1000], Train Loss: 0.0804, Train Accuracy: 0.9833
+contrastive_loss_user:0	, contrastive_loss_business:0	, bce_loss:0.03136513754725456	, loss:0.041190631687641144
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15421 num_false 1981
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1952,    18],
+        [   29, 15403]])
+Validation at epoch 117: Loss=0.0564, Accuracy=0.9973, FP Rate=0.0091
+Epoch [118/1000], Validation Loss: 0.0564, Validation Accuracy: 0.9973
+Epoch [118/1000], Train Loss: 0.0755, Train Accuracy: 0.9851
+contrastive_loss_user:0.025968771427869797	, contrastive_loss_business:0.0026543019339442253	, bce_loss:0.020744778215885162	, loss:0.064832903444767
+Epoch [119/1000], Train Loss: 0.0648, Train Accuracy: 0.9865
+contrastive_loss_user:0.026236621662974358	, contrastive_loss_business:0.0031273048371076584	, bce_loss:0.021368466317653656	, loss:0.06662490218877792
+Epoch [120/1000], Train Loss: 0.0714, Train Accuracy: 0.9852
+contrastive_loss_user:0.040605492889881134	, contrastive_loss_business:0.006486338563263416	, bce_loss:0.027798548340797424	, loss:0.0983506590127945
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15436 num_false 1966
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1937,    33],
+        [   29, 15403]])
+Validation at epoch 120: Loss=0.0656, Accuracy=0.9964, FP Rate=0.0168
+Epoch [121/1000], Validation Loss: 0.0656, Validation Accuracy: 0.9964
+Epoch [121/1000], Train Loss: 0.0904, Train Accuracy: 0.9844
+contrastive_loss_user:0.02556488662958145	, contrastive_loss_business:0.007350042462348938	, bce_loss:0.019561894237995148	, loss:0.06891579926013947
+Epoch [122/1000], Train Loss: 0.0767, Train Accuracy: 0.9856
+contrastive_loss_user:0.05346956476569176	, contrastive_loss_business:0.005518486723303795	, bce_loss:0.04077381268143654	, loss:0.131013423204422
+Epoch [123/1000], Train Loss: 0.0722, Train Accuracy: 0.9863
+contrastive_loss_user:0.0448552668094635	, contrastive_loss_business:0.006201498676091433	, bce_loss:0.017753738909959793	, loss:0.09036619961261749
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15417 num_false 1985
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1955,    15],
+        [   30, 15402]])
+Validation at epoch 123: Loss=0.0459, Accuracy=0.9974, FP Rate=0.0076
+Epoch [124/1000], Validation Loss: 0.0459, Validation Accuracy: 0.9974
+Epoch [124/1000], Train Loss: 0.0726, Train Accuracy: 0.9859
+contrastive_loss_user:0.040896229445934296	, contrastive_loss_business:0.002424485981464386	, bce_loss:0.0221451036632061	, loss:0.08597374707460403
+Epoch [125/1000], Train Loss: 0.0703, Train Accuracy: 0.9861
+contrastive_loss_user:0	, contrastive_loss_business:0.0044328258372843266	, bce_loss:0.0193440243601799	, loss:0.03122522309422493
+Epoch [126/1000], Train Loss: 0.0664, Train Accuracy: 0.9865
+contrastive_loss_user:0.05437494441866875	, contrastive_loss_business:0.009320862591266632	, bce_loss:0.018041612580418587	, loss:0.10734260827302933
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15426 num_false 1976
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1944,    26],
+        [   32, 15400]])
+Validation at epoch 126: Loss=0.0518, Accuracy=0.9967, FP Rate=0.0132
+Epoch [127/1000], Validation Loss: 0.0518, Validation Accuracy: 0.9967
+Epoch [127/1000], Train Loss: 0.0806, Train Accuracy: 0.9859
+contrastive_loss_user:0	, contrastive_loss_business:0.004261096939444542	, bce_loss:0.025901148095726967	, loss:0.03961091861128807
+Epoch [128/1000], Train Loss: 0.0690, Train Accuracy: 0.9861
+contrastive_loss_user:0.060864079743623734	, contrastive_loss_business:0.0016664693830534816	, bce_loss:0.02081066370010376	, loss:0.10944882035255432
+Epoch [129/1000], Train Loss: 0.0707, Train Accuracy: 0.9867
+contrastive_loss_user:0.03424452617764473	, contrastive_loss_business:0.006050843745470047	, bce_loss:0.020989034324884415	, loss:0.08048245310783386
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15419 num_false 1983
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1953,    17],
+        [   30, 15402]])
+Validation at epoch 129: Loss=0.0530, Accuracy=0.9973, FP Rate=0.0086
+Epoch [130/1000], Validation Loss: 0.0530, Validation Accuracy: 0.9973
+Epoch [130/1000], Train Loss: 0.0618, Train Accuracy: 0.9873
+contrastive_loss_user:0.04916980862617493	, contrastive_loss_business:0	, bce_loss:0.018944846466183662	, loss:0.089452363550663
+Epoch [131/1000], Train Loss: 0.0744, Train Accuracy: 0.9862
+contrastive_loss_user:0	, contrastive_loss_business:0.01092501264065504	, bce_loss:0.02194136381149292	, loss:0.04316215217113495
+Epoch [132/1000], Train Loss: 0.0765, Train Accuracy: 0.9863
+contrastive_loss_user:0	, contrastive_loss_business:0	, bce_loss:0.024275926873087883	, loss:0.03188064321875572
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15420 num_false 1982
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1950,    20],
+        [   32, 15400]])
+Validation at epoch 132: Loss=0.0501, Accuracy=0.9970, FP Rate=0.0102
+Epoch [133/1000], Validation Loss: 0.0501, Validation Accuracy: 0.9970
+Epoch [133/1000], Train Loss: 0.0746, Train Accuracy: 0.9870
+contrastive_loss_user:0	, contrastive_loss_business:0.005306646693497896	, bce_loss:0.023134203627705574	, loss:0.03735027834773064
+Epoch [134/1000], Train Loss: 0.0659, Train Accuracy: 0.9873
+contrastive_loss_user:0.06833772361278534	, contrastive_loss_business:0.011791921220719814	, bce_loss:0.0197296142578125	, loss:0.13114133477210999
+Epoch [135/1000], Train Loss: 0.0726, Train Accuracy: 0.9874
+contrastive_loss_user:0	, contrastive_loss_business:0.006608355790376663	, bce_loss:0.025796201080083847	, loss:0.042555660009384155
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15419 num_false 1983
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1953,    17],
+        [   30, 15402]])
+Validation at epoch 135: Loss=0.0463, Accuracy=0.9973, FP Rate=0.0086
+Epoch [136/1000], Validation Loss: 0.0463, Validation Accuracy: 0.9973
+Epoch [136/1000], Train Loss: 0.0686, Train Accuracy: 0.9866
+contrastive_loss_user:0	, contrastive_loss_business:0.005337403621524572	, bce_loss:0.020798705518245697	, loss:0.034323550760746
+Epoch [137/1000], Train Loss: 0.0638, Train Accuracy: 0.9866
+contrastive_loss_user:0.08459058403968811	, contrastive_loss_business:0.012360567227005959	, bce_loss:0.021061791107058525	, loss:0.15498186647891998
+Epoch [138/1000], Train Loss: 0.0765, Train Accuracy: 0.9878
+contrastive_loss_user:0.03962622955441475	, contrastive_loss_business:0.003312933025881648	, bce_loss:0.01501347217708826	, loss:0.0761069804430008
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15423 num_false 1979
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1950,    20],
+        [   29, 15403]])
+Validation at epoch 138: Loss=0.0472, Accuracy=0.9972, FP Rate=0.0102
+Epoch [139/1000], Validation Loss: 0.0472, Validation Accuracy: 0.9972
+Epoch [139/1000], Train Loss: 0.0797, Train Accuracy: 0.9872
+contrastive_loss_user:0	, contrastive_loss_business:0.026145827025175095	, bce_loss:0.03401197865605354	, loss:0.07900293171405792
+Epoch [140/1000], Train Loss: 0.0664, Train Accuracy: 0.9880
+contrastive_loss_user:0	, contrastive_loss_business:0	, bce_loss:0.015813220292329788	, loss:0.02076689526438713
+Epoch [141/1000], Train Loss: 0.0679, Train Accuracy: 0.9888
+contrastive_loss_user:0.038217347115278244	, contrastive_loss_business:0.005438040941953659	, bce_loss:0.013084175065159798	, loss:0.07451388984918594
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15415 num_false 1987
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1961,     9],
+        [   26, 15406]])
+Validation at epoch 141: Loss=0.0375, Accuracy=0.9980, FP Rate=0.0046
+Epoch [142/1000], Validation Loss: 0.0375, Validation Accuracy: 0.9980
+Epoch [142/1000], Train Loss: 0.0663, Train Accuracy: 0.9881
+contrastive_loss_user:0	, contrastive_loss_business:0.006299296393990517	, bce_loss:0.03008424863219261	, loss:0.04778111353516579
+Epoch [143/1000], Train Loss: 0.0625, Train Accuracy: 0.9871
+contrastive_loss_user:0	, contrastive_loss_business:0.005057460628449917	, bce_loss:0.018408477306365967	, loss:0.03081691637635231
+Epoch [144/1000], Train Loss: 0.0589, Train Accuracy: 0.9891
+contrastive_loss_user:0.4148884415626526	, contrastive_loss_business:0	, bce_loss:0.01958412304520607	, loss:0.5705761909484863
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15554 num_false 1848
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1796,   174],
+        [   52, 15380]])
+Validation at epoch 144: Loss=0.0511, Accuracy=0.9870, FP Rate=0.0883
+Epoch [145/1000], Validation Loss: 0.0511, Validation Accuracy: 0.9870
+Epoch [145/1000], Train Loss: 0.0729, Train Accuracy: 0.9885
+contrastive_loss_user:0.08187144249677658	, contrastive_loss_business:0.010099935345351696	, bce_loss:0.022967347875237465	, loss:0.15094460546970367
+Epoch [146/1000], Train Loss: 0.1606, Train Accuracy: 0.9861
+contrastive_loss_user:0	, contrastive_loss_business:0.003445792943239212	, bce_loss:0.01697470061480999	, loss:0.026817450299859047
+Epoch [147/1000], Train Loss: 0.0699, Train Accuracy: 0.9885
+contrastive_loss_user:0.05623603239655495	, contrastive_loss_business:0.004180969670414925	, bce_loss:0.018768034875392914	, loss:0.10399066656827927
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15425 num_false 1977
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1953,    17],
+        [   24, 15408]])
+Validation at epoch 147: Loss=0.0458, Accuracy=0.9976, FP Rate=0.0086
+Epoch [148/1000], Validation Loss: 0.0458, Validation Accuracy: 0.9976
+Epoch [148/1000], Train Loss: 0.0653, Train Accuracy: 0.9880
+contrastive_loss_user:0	, contrastive_loss_business:0.0018909992650151253	, bce_loss:0.02217242866754532	, loss:0.03160157427191734
+Epoch [149/1000], Train Loss: 0.0601, Train Accuracy: 0.9895
+contrastive_loss_user:0	, contrastive_loss_business:0.002748982049524784	, bce_loss:0.019179757684469223	, loss:0.028798172250390053
+Epoch [150/1000], Train Loss: 0.0622, Train Accuracy: 0.9896
+contrastive_loss_user:0.04626333341002464	, contrastive_loss_business:0	, bce_loss:0.018304837867617607	, loss:0.08479490131139755
+shape of all_preds is torch.Size([17402]), all_targets is torch.Size([17402])
+all targets num_true 15432 num_false 1970
+all preds num_true 15422 num_false 1980
+all_preds tensor([True, True, True,  ..., True, True, True])
+all_targets tensor([True, True, True,  ..., True, True, True])
+confusion matrix tensor([[ 1956,    14],
+        [   24, 15408]])
+Validation at epoch 150: Loss=0.0308, Accuracy=0.9978, FP Rate=0.0071
+Epoch [151/1000], Validation Loss: 0.0308, Validation Accuracy: 0.9978
+Epoch [151/1000], Train Loss: 0.0698, Train Accuracy: 0.9898
+contrastive_loss_user:0	, contrastive_loss_business:0.011145957745611668	, bce_loss:0.014422174543142319	, loss:0.03357764706015587
+Epoch [152/1000], Train Loss: 0.0620, Train Accuracy: 0.9896
+contrastive_loss_user:0.03053892031311989	, contrastive_loss_business:0.005711229983717203	, bce_loss:0.016671938821673393	, loss:0.06950055062770844
+Epoch [153/1000], Train Loss: 0.0625, Train Accuracy: 0.9882
